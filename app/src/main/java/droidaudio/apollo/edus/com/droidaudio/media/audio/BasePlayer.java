@@ -28,7 +28,7 @@ public abstract class BasePlayer implements IPlayer {
             @Override
             public void run() {
                 if(mPlayerListener != null){
-                    mPlayerListener.onPreparing(filePath);
+                    mPlayerListener.onPrepared(filePath);
                 }
             }
         });
@@ -39,7 +39,7 @@ public abstract class BasePlayer implements IPlayer {
             @Override
             public void run() {
                 if(mPlayerListener != null){
-                    mPlayerListener.onPrepared(filePath);
+                    mPlayerListener.onPreparing(filePath);
                 }
             }
         });

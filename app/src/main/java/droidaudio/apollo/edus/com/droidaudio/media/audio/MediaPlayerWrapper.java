@@ -273,6 +273,7 @@ public class MediaPlayerWrapper extends BasePlayer {
         public void onPrepared(MediaPlayer mp) {
             if(mState == IPlayer.INITIALIZED || mState == IPlayer.PREPARING){
                 mState = IPlayer.PREPARED;
+                notifyOnPrepared(mFilePath);
                 handlePrepared();
             }else{
                 Log.e(TAG, "onPrepared state not right,mState:"+mState);

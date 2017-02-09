@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +44,11 @@ public class MediaPlayerWrapperTestActivity extends AppCompatActivity implements
     private Button mBtResume;
     private Button mBtStopPlay;
     private MediaInfo mMediaInfo;
+    private SeekBar mSbSeek;
+
+    private TextView mTvTitle;
+    private TextView mTvCurrentPosition;
+    private TextView mTvTotalDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,31 @@ public class MediaPlayerWrapperTestActivity extends AppCompatActivity implements
         mBtResume.setOnClickListener(this);
         mBtStopPlay = (Button) findViewById(R.id.bt_stopPlay);
         mBtStopPlay.setOnClickListener(this);
+        mSbSeek = (SeekBar) findViewById(R.id.sb_seek);
+        mTvTitle = (TextView) findViewById(R.id.tv_playing_title);
+        mTvCurrentPosition = (TextView) findViewById(R.id.tv_current_progress);
+        mTvTotalDuration = (TextView) findViewById(R.id.tv_duration);
+
+        mSbSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(fromUser){
+                    if(mMediaInfo != null && mMediaPlayerWrapper != null && !TextUtils.isEmpty(mMediaPlayerWrapper.getPlayPath())){
+                        mMediaPlayerWrapper.seekTo(progress);
+                    }
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         initData();
     }
 
@@ -86,6 +117,7 @@ public class MediaPlayerWrapperTestActivity extends AppCompatActivity implements
                 @Override
                 public void onPreparing(String filePath) {
                     Log.e(TAG, "onPreparing, filePath:"+filePath);
+                    mTvTitle.setText(filePath);
                 }
 
                 @Override
@@ -106,22 +138,38 @@ public class MediaPlayerWrapperTestActivity extends AppCompatActivity implements
                 @Override
                 public void onError(String filePath, int what, int extra) {
                     Log.e(TAG, "onError, filePath:"+filePath+"what:"+what+",extra:"+extra);
+                    mMediaInfo = null;
+                    clearPlayUI();
                 }
 
                 @Override
                 public void onStopped(String filePath) {
                     Log.e(TAG, "onStopped, filePath:"+filePath);
+                    clearPlayUI();
                 }
 
                 @Override
                 public void onComplete(String filePath) {
                     Log.e(TAG, "onComplete, filePath:"+filePath);
                     mMediaInfo = null;
+                    clearPlayUI();
+                }
+
+                private void clearPlayUI() {
+                    mTvTitle.setText(null);
+                    mTvCurrentPosition.setText(null);
+                    mTvTotalDuration.setText(null);
+                    mSbSeek.setProgress(0);
+                    mSbSeek.setMax(100);
                 }
 
                 @Override
                 public void onProgressChanged(String filePath, int curPosition, int duration) {
                     Log.e(TAG, "onProgressChanged, filePath:"+filePath+",curPosition:"+curPosition+",duration:"+duration);
+                    mSbSeek.setMax(duration);
+                    mSbSeek.setProgress(curPosition);
+                    mTvCurrentPosition.setText(String.valueOf(curPosition));
+                    mTvTotalDuration.setText(String.valueOf(duration));
                 }
             });
         }
