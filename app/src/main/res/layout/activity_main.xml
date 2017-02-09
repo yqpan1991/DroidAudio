@@ -18,5 +18,11 @@
         android:layout_height="wrap_content"
         android:text="audio record and track" />
 
+    <Button
+        android:id="@+id/bt_media_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="音乐播放测试" />
+
 
 </LinearLayout>
