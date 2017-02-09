@@ -45,12 +45,12 @@ public abstract class BasePlayer implements IPlayer {
         });
     }
 
-    protected void notifyOnStart(final String filePath){
+    protected void notifyOnPlay(final String filePath){
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {
                 if(mPlayerListener != null){
-                    mPlayerListener.onStart(filePath);
+                    mPlayerListener.onPlay(filePath);
                 }
             }
         });
@@ -62,16 +62,6 @@ public abstract class BasePlayer implements IPlayer {
             public void run() {
                 if(mPlayerListener != null){
                     mPlayerListener.onPause(filePath);
-                }
-            }
-        });
-    }
-    protected void notifyOnResume(final String filePath){
-        mUiHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if(mPlayerListener != null){
-                    mPlayerListener.onResume(filePath);
                 }
             }
         });

@@ -55,8 +55,8 @@ public class MediaPlayerWrapperTest extends InstrumentationTestCase {
             }
 
             @Override
-            public void onResume(String filePath) {
-                assertEquals("onResume not called", "onResume called");
+            public void onPlay(String filePath) {
+                assertEquals("onPlay not called", "onPlay called");
             }
 
             @Override

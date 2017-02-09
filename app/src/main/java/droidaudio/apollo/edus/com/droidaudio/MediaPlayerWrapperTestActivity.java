@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,11 +38,26 @@ public class MediaPlayerWrapperTestActivity extends AppCompatActivity implements
     private MediaAdapter mAdapter;
     private MediaPlayerWrapper mMediaPlayerWrapper;
 
+    private Button mBtPlay;
+    private Button mBtPause;
+    private Button mBtResume;
+    private Button mBtStopPlay;
+    private MediaInfo mMediaInfo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_test);
         mLvContent = (ListView) findViewById(R.id.lv_content);
+
+        mBtPlay = (Button) findViewById(R.id.bt_play);
+        mBtPlay.setOnClickListener(this);
+        mBtPause = (Button) findViewById(R.id.bt_pause);
+        mBtPause.setOnClickListener(this);
+        mBtResume = (Button) findViewById(R.id.bt_resume);
+        mBtResume.setOnClickListener(this);
+        mBtStopPlay = (Button) findViewById(R.id.bt_stopPlay);
+        mBtStopPlay.setOnClickListener(this);
         initData();
     }
 
@@ -78,18 +94,13 @@ public class MediaPlayerWrapperTestActivity extends AppCompatActivity implements
                 }
 
                 @Override
-                public void onStart(String filePath) {
-                    Log.e(TAG, "onStart, filePath:"+filePath);
-                }
-
-                @Override
                 public void onPause(String filePath) {
                     Log.e(TAG, "onPause, filePath:"+filePath);
                 }
 
                 @Override
-                public void onResume(String filePath) {
-                    Log.e(TAG, "onResume, filePath:"+filePath);
+                public void onPlay(String filePath) {
+                    Log.e(TAG, "onPlay, filePath:"+filePath);
                 }
 
                 @Override
@@ -105,6 +116,7 @@ public class MediaPlayerWrapperTestActivity extends AppCompatActivity implements
                 @Override
                 public void onComplete(String filePath) {
                     Log.e(TAG, "onComplete, filePath:"+filePath);
+                    mMediaInfo = null;
                 }
 
                 @Override
@@ -113,11 +125,38 @@ public class MediaPlayerWrapperTestActivity extends AppCompatActivity implements
                 }
             });
         }
-        mMediaPlayerWrapper.start(mediaInfo.path);
+        mMediaInfo = mediaInfo;
+        mMediaPlayerWrapper.start(mMediaInfo.path);
     }
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.bt_play:
+                if(mMediaInfo != null){
+                    mMediaPlayerWrapper.start(mMediaInfo.path);
+                }
+                break;
+            case R.id.bt_pause:
+                if(!TextUtils.isEmpty(mMediaPlayerWrapper.getPlayPath())){
+                    if(mMediaPlayerWrapper.isPlaying()){
+                        mMediaPlayerWrapper.pause();
+                    }
+                }
+                break;
+            case R.id.bt_resume:
+                if(!TextUtils.isEmpty(mMediaPlayerWrapper.getPlayPath())){
+                    if(!mMediaPlayerWrapper.isPlaying()){
+                        mMediaPlayerWrapper.resume();
+                    }
+                }
+                break;
+            case R.id.bt_stopPlay:
+                if(!TextUtils.isEmpty(mMediaPlayerWrapper.getPlayPath())){
+                    mMediaPlayerWrapper.stop();
+                }
+                break;
+        }
 
     }
 

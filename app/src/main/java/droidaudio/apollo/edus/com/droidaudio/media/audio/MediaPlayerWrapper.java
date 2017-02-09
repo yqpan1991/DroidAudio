@@ -1,6 +1,9 @@
 package droidaudio.apollo.edus.com.droidaudio.media.audio;
 
 import android.media.MediaPlayer;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -10,16 +13,21 @@ import droidaudio.apollo.edus.com.droidaudio.media.IPlayer;
 
 /**
  * Created by PandaPan on 2017/2/6.
- * TODO: 向外通知的几个方法,没有正确调用,需要添加这些回调
  * 添加handler的机制,需要向外回调音乐播放器的进度
+ * 在不存在音乐播放的path时,调用resume,pause,seekTo会抛出异常的回调
+ *
  */
 
 public class MediaPlayerWrapper extends BasePlayer {
+    private static final int MSG_WHAT_NOTIFY_PROGRESS = 1000;
+    private static final int NOTIFY_PROGRESS_DELAY = 1000;
     private final String TAG = this.getClass().getSimpleName();
     private String mFilePath;
     private MediaPlayer mMediaPlayer;
     private int mState;
     private int mTargetPosition;
+
+
 
     public MediaPlayerWrapper(){
         super();
@@ -42,17 +50,22 @@ public class MediaPlayerWrapper extends BasePlayer {
             }
         }
         mFilePath = localPath;
-        seekTo(-1);
+        seekTo(0);
     }
 
     @Override
     public void pause() {
         if(mState == IPlayer.RUNNING){
             try{
-                mMediaPlayer.pause();
+                if(mMediaPlayer.isPlaying()){
+                    mMediaPlayer.pause();
+                    notifyOnPause(mFilePath);
+                }
             }catch (IllegalStateException ex){
                 handleErrorEncounted(0 , 0);
             }
+        }else if(mState == IPlayer.IDLE || mState == IPlayer.INITIALIZED){
+            handleErrorEncounted(0, 0);
         }
     }
 
@@ -64,6 +77,8 @@ public class MediaPlayerWrapper extends BasePlayer {
             String filePath = mFilePath;
             init();
             notifyOnStopped(filePath);
+        }else{
+            handleErrorEncounted(0 , 0);
         }
     }
 
@@ -76,14 +91,19 @@ public class MediaPlayerWrapper extends BasePlayer {
                     //do nothing
                 }else{
                     mMediaPlayer.start();
-                    notifyOnResume(mFilePath);
+                    checkNotifyOnPlay();
                 }
             }catch (IllegalStateException ex){
                 handleErrorEncounted(0, 0);
             }
         }else if(mState == IPlayer.IDLE || mState == IPlayer.INITIALIZED){
-            seekTo(-1);
+            seekTo(0);
         }
+    }
+
+    private void checkNotifyOnPlay() {
+        startNotify();
+        notifyOnPlay(mFilePath);
     }
 
     @Override
@@ -95,6 +115,10 @@ public class MediaPlayerWrapper extends BasePlayer {
         //Init --> Prepare
         //prepared --> run
         //run --> call start
+        if(targetPosition < 0){
+            targetPosition = 0;
+        }
+        mTargetPosition = targetPosition;
         if(TextUtils.isEmpty(mFilePath)){
             handleErrorEncounted(0,0);
             return;
@@ -112,10 +136,12 @@ public class MediaPlayerWrapper extends BasePlayer {
         }
         if(mState == IPlayer.INITIALIZED){
             mState = IPlayer.PREPARING;
+            notifyOnPreparing(mFilePath);
             mMediaPlayer.prepareAsync();
         }else if(mState == IPlayer.PREPARING){
             //when prepared,remember seekTo
         }else if(mState == IPlayer.PREPARED){//just start,then check seekTo
+            notifyOnPrepared(mFilePath);
             handlePrepared();
         }else if(mState == IPlayer.RUNNING){
             checkSeekPlay();
@@ -130,6 +156,7 @@ public class MediaPlayerWrapper extends BasePlayer {
             mState = IPlayer.RUNNING;
             try{
                 mMediaPlayer.start();
+                checkNotifyOnPlay();
             }catch(IllegalStateException ex){
                 ex.printStackTrace();
                 handleErrorEncounted(0, 0);
@@ -144,7 +171,7 @@ public class MediaPlayerWrapper extends BasePlayer {
 
     private void checkSeekPlay() {
         if(mState == IPlayer.RUNNING){
-            if(mTargetPosition > 0){
+            if(mTargetPosition >= 0){
                 int targetPosition = mTargetPosition;
                 mTargetPosition = -1;
                 mMediaPlayer.seekTo(targetPosition);
@@ -153,6 +180,7 @@ public class MediaPlayerWrapper extends BasePlayer {
                     //do nothing
                 }else{
                     mMediaPlayer.start();
+                    checkNotifyOnPlay();
                 }
             }
         }else{
@@ -236,6 +264,8 @@ public class MediaPlayerWrapper extends BasePlayer {
         mMediaPlayer.setOnSeekCompleteListener(mOnSeekCompleteListener);
         mState = IPlayer.IDLE;
         mTargetPosition = -1;
+        mFilePath = null;
+        stopNotify();
     }
 
     private MediaPlayer.OnPreparedListener mOnPreparedListener = new MediaPlayer.OnPreparedListener() {
@@ -292,5 +322,34 @@ public class MediaPlayerWrapper extends BasePlayer {
             return false;
         }
     };
+
+    private void startNotify(){
+        mHandler.removeMessages(MSG_WHAT_NOTIFY_PROGRESS);
+        mHandler.sendEmptyMessage(MSG_WHAT_NOTIFY_PROGRESS);
+    }
+
+    private void stopNotify(){
+        mHandler.removeMessages(MSG_WHAT_NOTIFY_PROGRESS);
+    }
+
+
+    private Handler mHandler = new Handler(Looper.getMainLooper(), new Handler.Callback(){
+
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what){
+                case MSG_WHAT_NOTIFY_PROGRESS:
+                    if(mState == IPlayer.RUNNING){
+                        if(isPlaying()){
+                            notifyOnProgressChanged(mFilePath, getCurrentPosition(), getDuration());
+                            mHandler.removeMessages(MSG_WHAT_NOTIFY_PROGRESS);
+                            mHandler.sendEmptyMessageDelayed(MSG_WHAT_NOTIFY_PROGRESS, NOTIFY_PROGRESS_DELAY);
+                        }
+                    }
+                    break;
+            }
+            return true;
+        }
+    });
 
 }
