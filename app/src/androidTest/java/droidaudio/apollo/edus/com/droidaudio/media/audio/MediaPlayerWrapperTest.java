@@ -6,10 +6,8 @@ import android.test.InstrumentationTestCase;
 import android.text.TextUtils;
 import android.util.Log;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 import droidaudio.apollo.edus.com.droidaudio.media.IPlayerListener;
 
@@ -21,7 +19,7 @@ public class MediaPlayerWrapperTest extends InstrumentationTestCase {
     private final String TAG = "MediaPlayerWrapperTest";
 
     //测试播放
-    private MediaPlayerWrapper mMediaPlayerWrapper;
+    private StatedMediaPlayer mMediaPlayerWrapper;
     private int calltimes;
 
 
@@ -31,7 +29,7 @@ public class MediaPlayerWrapperTest extends InstrumentationTestCase {
     }
 
     public void testPlayNull() {
-        mMediaPlayerWrapper = new MediaPlayerWrapper();
+        mMediaPlayerWrapper = new StatedMediaPlayer();
         calltimes = 0;
         mMediaPlayerWrapper.setPlayerListener(new IPlayerListener() {
             @Override
@@ -42,11 +40,6 @@ public class MediaPlayerWrapperTest extends InstrumentationTestCase {
             @Override
             public void onPrepared(String filePath) {
                 assertEquals("onPrepared not called", "onPrepared called");
-            }
-
-            @Override
-            public void onStart(String filePath) {
-                assertEquals("onStart not called", "onStart called");
             }
 
             @Override

@@ -13,43 +13,42 @@ import droidaudio.apollo.edus.com.droidaudio.media.IPlayer;
 
 /**
  * Created by PandaPan on 2017/2/6.
- * 添加handler的机制,需要向外回调音乐播放器的进度
- * 在不存在音乐播放的path时,调用resume,pause,seekTo会抛出异常的回调
- *
+ *  仅仅做mediaPlayer的一个包装
+ *  实现以下的功能
+ *  1. 在外界非正常调用时,不会直接抛出illegtalStateException
+ *  2. 向外通知mediaplayer的播放中更改的状态
  */
 
-public class MediaPlayerWrapper extends BasePlayer {
+public class StatedMediaPlayer extends BasePlayer {
+    private final String TAG = this.getClass().getSimpleName();
     private static final int MSG_WHAT_NOTIFY_PROGRESS = 1000;
     private static final int NOTIFY_PROGRESS_DELAY = 1000;
-    private final String TAG = this.getClass().getSimpleName();
-    private String mFilePath;
+    private String mPlayingUrl;
     private MediaPlayer mMediaPlayer;
     private int mState;
     private int mTargetPosition;
 
-
-
-    public MediaPlayerWrapper(){
+    public StatedMediaPlayer(){
         super();
         init();
     }
 
     @Override
-    public void start(String localPath) {
+    public void start(String url) {
         //检查是否有当前播放的数据,如果存在,比对是否相同,如果相同,调用继续播放
         //如果不相同,释放上次的mediaPlayer,继续
         //检查localPath的合法性,如果不合法,返回错误,如果合法,初始化MediaPlayer,然后做seekTo的操作
-        if(!TextUtils.isEmpty(mFilePath)){
-            if(mFilePath.equals(localPath)){
+        if(!TextUtils.isEmpty(mPlayingUrl)){
+            if(mPlayingUrl.equals(url)){
                 resume();
                 return;
             }else{
-                String filePath = mFilePath;
+                String filePath = mPlayingUrl;
                 init();
                 notifyOnStopped(filePath);
             }
         }
-        mFilePath = localPath;
+        mPlayingUrl = url;
         seekTo(0);
     }
 
@@ -59,7 +58,7 @@ public class MediaPlayerWrapper extends BasePlayer {
             try{
                 if(mMediaPlayer.isPlaying()){
                     mMediaPlayer.pause();
-                    notifyOnPause(mFilePath);
+                    notifyOnPause(mPlayingUrl);
                 }
             }catch (IllegalStateException ex){
                 handleErrorEncounted(0 , 0);
@@ -74,7 +73,7 @@ public class MediaPlayerWrapper extends BasePlayer {
         //检查状态和文件,如果不合法,释放资源,然后向外报错
         //如果合法,执行stop的操作,并且设置当前的播放状态
         if(mState == IPlayer.RUNNING || mState == IPlayer.PREPARED || mState == IPlayer.PREPARING || mState == IPlayer.INITIALIZED){
-            String filePath = mFilePath;
+            String filePath = mPlayingUrl;
             init();
             notifyOnStopped(filePath);
         }else{
@@ -103,7 +102,7 @@ public class MediaPlayerWrapper extends BasePlayer {
 
     private void checkNotifyOnPlay() {
         startNotify();
-        notifyOnPlay(mFilePath);
+        notifyOnPlay(mPlayingUrl);
     }
 
     @Override
@@ -119,14 +118,14 @@ public class MediaPlayerWrapper extends BasePlayer {
             targetPosition = 0;
         }
         mTargetPosition = targetPosition;
-        if(TextUtils.isEmpty(mFilePath)){
+        if(TextUtils.isEmpty(mPlayingUrl)){
             handleErrorEncounted(0,0);
             return;
         }
         if(mState == IPlayer.IDLE){
             try {
                 //TODO: 是否还需要设置其他参数
-                mMediaPlayer.setDataSource(mFilePath);
+                mMediaPlayer.setDataSource(mPlayingUrl);
             } catch (IOException e) {
                 e.printStackTrace();
                 handleErrorEncounted(0, 0);
@@ -136,12 +135,12 @@ public class MediaPlayerWrapper extends BasePlayer {
         }
         if(mState == IPlayer.INITIALIZED){
             mState = IPlayer.PREPARING;
-            notifyOnPreparing(mFilePath);
+            notifyOnPreparing(mPlayingUrl);
             mMediaPlayer.prepareAsync();
         }else if(mState == IPlayer.PREPARING){
             //when prepared,remember seekTo
         }else if(mState == IPlayer.PREPARED){//just start,then check seekTo
-            notifyOnPrepared(mFilePath);
+            notifyOnPrepared(mPlayingUrl);
             handlePrepared();
         }else if(mState == IPlayer.RUNNING){
             checkSeekPlay();
@@ -191,7 +190,7 @@ public class MediaPlayerWrapper extends BasePlayer {
 
     @Override
     public String getPlayPath() {
-        return mFilePath;
+        return mPlayingUrl;
     }
 
     @Override
@@ -231,13 +230,13 @@ public class MediaPlayerWrapper extends BasePlayer {
     }
 
     private void handleErrorEncounted(int what, int extra){
-        String filePath = mFilePath;
+        String filePath = mPlayingUrl;
         init();
         notifyOnError(filePath, what, extra);
     }
 
     private void handleComplete(){
-        String filePath = mFilePath;
+        String filePath = mPlayingUrl;
         init();
         notifyOnComplete(filePath);
     }
@@ -264,7 +263,7 @@ public class MediaPlayerWrapper extends BasePlayer {
         mMediaPlayer.setOnSeekCompleteListener(mOnSeekCompleteListener);
         mState = IPlayer.IDLE;
         mTargetPosition = -1;
-        mFilePath = null;
+        mPlayingUrl = null;
         stopNotify();
     }
 
@@ -273,7 +272,7 @@ public class MediaPlayerWrapper extends BasePlayer {
         public void onPrepared(MediaPlayer mp) {
             if(mState == IPlayer.INITIALIZED || mState == IPlayer.PREPARING){
                 mState = IPlayer.PREPARED;
-                notifyOnPrepared(mFilePath);
+                notifyOnPrepared(mPlayingUrl);
                 handlePrepared();
             }else{
                 Log.e(TAG, "onPrepared state not right,mState:"+mState);
@@ -342,7 +341,7 @@ public class MediaPlayerWrapper extends BasePlayer {
                 case MSG_WHAT_NOTIFY_PROGRESS:
                     if(mState == IPlayer.RUNNING){
                         if(isPlaying()){
-                            notifyOnProgressChanged(mFilePath, getCurrentPosition(), getDuration());
+                            notifyOnProgressChanged(mPlayingUrl, getCurrentPosition(), getDuration());
                             mHandler.removeMessages(MSG_WHAT_NOTIFY_PROGRESS);
                             mHandler.sendEmptyMessageDelayed(MSG_WHAT_NOTIFY_PROGRESS, NOTIFY_PROGRESS_DELAY);
                         }

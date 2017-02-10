@@ -1,8 +1,6 @@
 package droidaudio.apollo.edus.com.droidaudio;
 
 import android.database.Cursor;
-import android.media.MediaPlayer;
-import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -16,17 +14,12 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import droidaudio.apollo.edus.com.droidaudio.media.IPlayerListener;
-import droidaudio.apollo.edus.com.droidaudio.media.IRecorderListener;
-import droidaudio.apollo.edus.com.droidaudio.media.MediaController;
-import droidaudio.apollo.edus.com.droidaudio.media.audio.MediaPlayerWrapper;
+import droidaudio.apollo.edus.com.droidaudio.media.audio.StatedMediaPlayer;
 
 /**
  * 学习使用系统Media相关的使用
@@ -37,7 +30,7 @@ public class MediaPlayerWrapperTestActivity extends AppCompatActivity implements
     private List<MediaInfo> mMediaList = new ArrayList<>();
     private ListView mLvContent;
     private MediaAdapter mAdapter;
-    private MediaPlayerWrapper mMediaPlayerWrapper;
+    private StatedMediaPlayer mMediaPlayerWrapper;
 
     private Button mBtPlay;
     private Button mBtPause;
@@ -112,7 +105,7 @@ public class MediaPlayerWrapperTestActivity extends AppCompatActivity implements
 
     private void handleClickItem(MediaInfo mediaInfo) {
         if(mMediaPlayerWrapper == null){
-            mMediaPlayerWrapper = new MediaPlayerWrapper();
+            mMediaPlayerWrapper = new StatedMediaPlayer();
             mMediaPlayerWrapper.setPlayerListener(new IPlayerListener() {
                 @Override
                 public void onPreparing(String filePath) {
