@@ -284,4 +284,15 @@ public class MediaPlayerWrapperTestActivity extends AppCompatActivity implements
         TextView tvTitle;
         TextView tvPath;
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mMediaPlayerWrapper != null){
+            if(!TextUtils.isEmpty(mMediaPlayerWrapper.getPlayPath())){
+                mMediaPlayerWrapper.stop();
+            }
+            mMediaPlayerWrapper = null;
+        }
+    }
 }
