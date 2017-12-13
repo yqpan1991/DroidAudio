@@ -7,6 +7,7 @@ import android.media.AudioTrack;
 import android.media.MediaRecorder;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -21,7 +22,8 @@ import java.util.Date;
  */
 
 public class DroidAudioRecorder implements IDroidAudioRecorder {
-    private int AUDIO_SOURCE = MediaRecorder.AudioSource.VOICE_RECOGNITION;
+    private final String TAG = this.getClass().getSimpleName();
+    private int AUDIO_SOURCE = MediaRecorder.AudioSource.MIC;
     private int SAMPLE_RATE = 16000;
     private int CHANNEL_IN_COUNT = AudioFormat.CHANNEL_IN_STEREO;
     private int AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;

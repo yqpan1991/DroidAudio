@@ -1,6 +1,8 @@
 package droidaudio.apollo.edus.com.droidaudio;
 
+import android.content.Context;
 import android.media.AudioFormat;
+import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.AudioTrack;
 import android.media.MediaRecorder;
@@ -103,6 +105,15 @@ public class AudioActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
         if(mTrack == null){
+            AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            audioManager.setMode(AudioManager.MODE_NORMAL);
+            int currentMusicVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+            int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+            Log.e(TAG, "maxVolume:"+maxVolume+",cur:"+currentMusicVolume);
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentMusicVolume,0);
+            audioManager.setSpeakerphoneOn(true);
+            Log.e(TAG, "isSpeakerphoneOn: "+audioManager.isSpeakerphoneOn());
+
             mTrack = new DroidAudioTrack();
             mTrack.setOnPlayStateChangedListener(new IDroidAudioTrack.OnPlayStateChangedListener() {
                 @Override

@@ -1,9 +1,11 @@
 package droidaudio.apollo.edus.com.droidaudio.audio;
 
 import android.media.AudioFormat;
+import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.media.MediaRecorder;
 import android.os.Handler;
+import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -20,7 +22,8 @@ import droidaudio.apollo.edus.com.droidaudio.thread.SingleExecutor;
  */
 
 public class DroidAudioTrack implements IDroidAudioTrack {
-    private int AUDIO_SOURCE = MediaRecorder.AudioSource.VOICE_RECOGNITION;
+    private final String TAG = this.getClass().getSimpleName();
+    private int AUDIO_SOURCE = AudioManager.STREAM_MUSIC;
     private int SAMPLE_RATE = 16000;
     private int CHANNEL_IN_COUNT = AudioFormat.CHANNEL_IN_STEREO;
     private int CHANNEL_OUT_COUNT = AudioFormat.CHANNEL_OUT_STEREO;
