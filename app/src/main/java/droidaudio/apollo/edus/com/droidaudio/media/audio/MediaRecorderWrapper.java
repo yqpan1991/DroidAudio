@@ -8,6 +8,7 @@ import android.util.Log;
 import java.io.File;
 import java.io.IOException;
 
+import droidaudio.apollo.edus.com.droidaudio.Utils.MainLooper;
 import droidaudio.apollo.edus.com.droidaudio.media.IRecorder;
 import droidaudio.apollo.edus.com.droidaudio.media.IRecorderListener;
 
@@ -110,24 +111,40 @@ public class MediaRecorderWrapper implements IRecorder {
         return mContext.getFilesDir().getAbsolutePath() + File.separator + "record-" + System.currentTimeMillis() + ".amr";
     }
 
-    private void notifyStopRecording(String filePath) {
+    private void notifyStopRecording(final String filePath) {
         Log.e(TAG, "stopRecoding:filePath:"+filePath);
-        if(mRecorderListener != null){
-            mRecorderListener.onStop(filePath,0);
-        }
+        MainLooper.instance().postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                if(mRecorderListener != null){
+                    mRecorderListener.onStop(filePath,0);
+                }
+            }
+        });
     }
 
-    private void notifyErrorEncounted(int stopReason, int what, int extra) {
+    private void notifyErrorEncounted(final int stopReason, final int what, final int extra) {
         Log.e(TAG,  "errorEncounted:stopReason"+stopReason+",what:"+what+",extra:"+extra);
-        if(mRecorderListener != null){
-            mRecorderListener.onError(stopReason, what, extra);
-        }
+        MainLooper.instance().postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                if(mRecorderListener != null){
+                    mRecorderListener.onError(stopReason, what, extra);
+                }
+            }
+        });
     }
 
-    private void notifyStartRecording(String filePath) {
+    private void notifyStartRecording(final String filePath) {
         Log.e(TAG, "startRecoding:filePath:"+filePath);
-        if(mRecorderListener != null){
-            mRecorderListener.onStart(filePath);
-        }
+        MainLooper.instance().postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                if(mRecorderListener != null){
+                    mRecorderListener.onStart(filePath);
+                }
+            }
+        });
+
     }
 }

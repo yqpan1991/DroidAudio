@@ -44,11 +44,7 @@ public class MediaController{
     public synchronized void startRecording(final IRecorderListener listener){
         mRecorderListener = listener;
         releasePlayer();
-        if(mRecorder != null){
-            if(!mRecorder.isRecording()){
-                mRecorder.startRecording();
-            }
-        }else{
+        if(mRecorder == null){
             mRecorder = new MediaRecorderWrapper(mContext, new IRecorderListener() {
                 @Override
                 public void onStart(String filePath) {
@@ -73,6 +69,9 @@ public class MediaController{
                     }
                 }
             });
+        }
+        if(!mRecorder.isRecording()){
+            mRecorder.startRecording();
         }
     }
 
