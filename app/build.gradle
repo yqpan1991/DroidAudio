@@ -2,10 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion "24.0.2"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "droidaudio.apollo.edus.com.droidaudio"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -25,5 +25,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.github.yqpan1991:DroidCommon:0.0.1'
     testCompile 'junit:junit:4.12'
 }

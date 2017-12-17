@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.bt_media).setOnClickListener(this);
+        findViewById(R.id.bt_media_v2).setOnClickListener(this);
         findViewById(R.id.bt_audio).setOnClickListener(this);
         findViewById(R.id.bt_media_test).setOnClickListener(this);
     }
@@ -29,6 +30,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             case R.id.bt_media:
                 startActivity(new Intent(this, MediaActivity.class));
+                break;
+            case R.id.bt_media_v2:
+                startActivity(new Intent(this, MediaV2Activity.class));
                 break;
             case R.id.bt_audio:
                 startActivity(new Intent(this, AudioActivity.class));
