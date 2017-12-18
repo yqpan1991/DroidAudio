@@ -68,6 +68,12 @@ public class MediaV2Activity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handleStopRecord();
+    }
+
     private void toastNotImplementYet(){
         Toast.makeText(this, "暂未实现", Toast.LENGTH_SHORT).show();
     }
