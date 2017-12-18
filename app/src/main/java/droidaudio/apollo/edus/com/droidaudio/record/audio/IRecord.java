@@ -10,6 +10,12 @@ public interface IRecord {
     void stopRecord();
     boolean isRecording();
 
+    /**
+     * 录音开始后,才能获取到录音的路径
+     * @return
+     */
+    String getRecordPath();
+
     void addRecordListener(IRecordListener recordListener);
     void removeRecordListener(IRecordListener recordListener);
 }

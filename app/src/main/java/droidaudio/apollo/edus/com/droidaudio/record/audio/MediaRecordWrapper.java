@@ -205,6 +205,11 @@ public class MediaRecordWrapper extends BaseRecord {
         return mIsRecording;
     }
 
+    @Override
+    public String getRecordPath() {
+        return mFilePath;
+    }
+
     private String makeFilePath() {
         if (mContext == null) {
             return null;
