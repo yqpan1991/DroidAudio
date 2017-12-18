@@ -50,6 +50,7 @@ public interface IPlayerListener {
     void onComplete(String filePath);
 
     /**
+     * @deprecated
      * 播放文件当前的进度更新
      * @param filePath
      * @param curPosition
