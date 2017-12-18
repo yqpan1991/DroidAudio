@@ -21,7 +21,7 @@ public class MainLooper {
         mMainHandler = new Handler(Looper.getMainLooper());
     }
 
-    public void postRunnable(Runnable runnable){
+    public void post(Runnable runnable){
         if(runnable != null){
             mMainHandler.post(runnable);
         }

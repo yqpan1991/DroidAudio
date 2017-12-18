@@ -164,7 +164,7 @@ public class MediaRecordWrapper extends BaseRecord {
         boolean realReleased = releaseRecordInner();//由于stopRecord 可能会被外面多次调用,并且并且异步操作,因而需要做校验,是否是真正的释放了,这样才能向外通知
         if (realReleased) {
             checkNotifyRecordStop();
-            MainLooper.instance().postRunnable(new Runnable() {
+            MainLooper.instance().post(new Runnable() {
                 @Override
                 public void run() {
                     mIsRecording = false;

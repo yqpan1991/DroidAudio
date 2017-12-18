@@ -33,7 +33,7 @@ public abstract class BaseRecord implements IRecord {
     }
 
     protected void notifyOnStartRecord(final String filePath){
-        MainLooper.instance().postRunnable(new Runnable() {
+        MainLooper.instance().post(new Runnable() {
             @Override
             public void run() {
                 Iterator<IRecordListener> iterator = mIRecordListenerSet.iterator();
@@ -48,7 +48,7 @@ public abstract class BaseRecord implements IRecord {
     }
 
     protected void notifyOnStopRecord(final String filePath){
-        MainLooper.instance().postRunnable(new Runnable() {
+        MainLooper.instance().post(new Runnable() {
             @Override
             public void run() {
                 Iterator<IRecordListener> iterator = mIRecordListenerSet.iterator();
@@ -63,7 +63,7 @@ public abstract class BaseRecord implements IRecord {
     }
 
     protected void notifyOnRecordException(final String filePath, final int errorCode, final String errorMsg){
-        MainLooper.instance().postRunnable(new Runnable() {
+        MainLooper.instance().post(new Runnable() {
             @Override
             public void run() {
                 Iterator<IRecordListener> iterator = mIRecordListenerSet.iterator();

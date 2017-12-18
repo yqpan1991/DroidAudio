@@ -113,7 +113,7 @@ public class MediaRecorderWrapper implements IRecorder {
 
     private void notifyStopRecording(final String filePath) {
         Log.e(TAG, "stopRecoding:filePath:"+filePath);
-        MainLooper.instance().postRunnable(new Runnable() {
+        MainLooper.instance().post(new Runnable() {
             @Override
             public void run() {
                 if(mRecorderListener != null){
@@ -125,7 +125,7 @@ public class MediaRecorderWrapper implements IRecorder {
 
     private void notifyErrorEncounted(final int stopReason, final int what, final int extra) {
         Log.e(TAG,  "errorEncounted:stopReason"+stopReason+",what:"+what+",extra:"+extra);
-        MainLooper.instance().postRunnable(new Runnable() {
+        MainLooper.instance().post(new Runnable() {
             @Override
             public void run() {
                 if(mRecorderListener != null){
@@ -137,7 +137,7 @@ public class MediaRecorderWrapper implements IRecorder {
 
     private void notifyStartRecording(final String filePath) {
         Log.e(TAG, "startRecoding:filePath:"+filePath);
-        MainLooper.instance().postRunnable(new Runnable() {
+        MainLooper.instance().post(new Runnable() {
             @Override
             public void run() {
                 if(mRecorderListener != null){
