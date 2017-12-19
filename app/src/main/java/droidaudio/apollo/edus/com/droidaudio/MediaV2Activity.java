@@ -84,6 +84,7 @@ public class MediaV2Activity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void handleStopPlay() {
+        mNeedCheckPlay = false;
         if(mPlay != null){
             mPlay.stop();
         }
@@ -149,8 +150,8 @@ public class MediaV2Activity extends AppCompatActivity implements View.OnClickLi
                 mRecord.removeRecordListener(mRecordListener);
                 mRecord = null;
             }
-            checkPlay();
             Log.e(TAG, "onStopRecordFinished,filePath:"+filePath);
+            checkPlay();
         }
 
         @Override
@@ -160,8 +161,8 @@ public class MediaV2Activity extends AppCompatActivity implements View.OnClickLi
                 mRecord.stopRecord();
                 mRecord = null;
             }
-            checkPlay();
             Log.e(TAG, "onRecordException, filePath:"+filePath+",errroCode:"+errorCode+",errorMsg:"+errorMsg);
+            checkPlay();
 
         }
     };
