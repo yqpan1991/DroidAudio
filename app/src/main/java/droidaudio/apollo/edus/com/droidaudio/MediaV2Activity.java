@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.edus.apollo.common.utils.log.LogUtils;
+
 import droidaudio.apollo.edus.com.droidaudio.media.IPlayerListener;
 import droidaudio.apollo.edus.com.droidaudio.record.audio.IPlay;
 import droidaudio.apollo.edus.com.droidaudio.record.audio.IRecord;
@@ -27,6 +29,7 @@ public class MediaV2Activity extends AppCompatActivity implements View.OnClickLi
     private Handler mUiHandler = new Handler();
     private static final int MSG_CHECK_PLAY = 1;
     private boolean mNeedCheckPlay;
+    private static final boolean LOG_ENABLE = true;
 
 
     @Override
@@ -134,14 +137,14 @@ public class MediaV2Activity extends AppCompatActivity implements View.OnClickLi
             mRecord.addRecordListener(mRecordListener);
             mRecord.startRecord();
         }else{
-            Log.e(TAG, "----started with not null");
+            log("----started with not null");
         }
     }
     private IRecordListener mRecordListener = new IRecordListener() {
         @Override
         public void onStartRecord(String filePath) {
             mFilePath = filePath;
-            Log.e(TAG, "onStartRecord:filePath:"+filePath);
+            log("onStartRecord:filePath:"+filePath);
         }
 
         @Override
@@ -150,7 +153,7 @@ public class MediaV2Activity extends AppCompatActivity implements View.OnClickLi
                 mRecord.removeRecordListener(mRecordListener);
                 mRecord = null;
             }
-            Log.e(TAG, "onStopRecordFinished,filePath:"+filePath);
+            log("onStopRecordFinished,filePath:"+filePath);
             checkPlay();
         }
 
@@ -161,7 +164,7 @@ public class MediaV2Activity extends AppCompatActivity implements View.OnClickLi
                 mRecord.stopRecord();
                 mRecord = null;
             }
-            Log.e(TAG, "onRecordException, filePath:"+filePath+",errroCode:"+errorCode+",errorMsg:"+errorMsg);
+            log( "onRecordException, filePath:"+filePath+",errroCode:"+errorCode+",errorMsg:"+errorMsg);
             checkPlay();
 
         }
@@ -170,45 +173,45 @@ public class MediaV2Activity extends AppCompatActivity implements View.OnClickLi
     private IPlayerListener mPlayerListener = new IPlayerListener() {
         @Override
         public void onPreparing(String filePath) {
-            Log.e(TAG, "onPreparing , filePath:"+filePath);
+            log( "onPreparing , filePath:"+filePath);
         }
 
         @Override
         public void onPrepared(String filePath) {
-            Log.e(TAG, "onPrepared , filePath:"+filePath);
+            log( "onPrepared , filePath:"+filePath);
         }
 
         @Override
         public void onPause(String filePath) {
-            Log.e(TAG, "onPause , filePath:"+filePath);
+            log("onPause , filePath:"+filePath);
         }
 
         @Override
         public void onPlay(String filePath) {
-            Log.e(TAG, "onPlay , filePath:"+filePath);
+            log("onPlay , filePath:"+filePath);
         }
 
         @Override
         public void onError(String filePath, int what, int extra) {
-            Log.e(TAG, "onError , filePath:"+filePath);
+            log("onError , filePath:"+filePath);
             releasePlayer();
         }
 
         @Override
         public void onStopped(String filePath) {
-            Log.e(TAG, "onStopped , filePath:"+filePath);
+            log("onStopped , filePath:"+filePath);
             releasePlayer();
         }
 
         @Override
         public void onComplete(String filePath) {
-            Log.e(TAG, "onComplete , filePath:"+filePath);
+            log("onComplete , filePath:"+filePath);
             releasePlayer();
         }
 
         @Override
         public void onProgressChanged(String filePath, int curPosition, int duration) {
-            Log.e(TAG, "onProgressChanged , filePath:"+filePath);
+            log( "onProgressChanged , filePath:"+filePath);
         }
     };
 
@@ -222,6 +225,12 @@ public class MediaV2Activity extends AppCompatActivity implements View.OnClickLi
     private void  checkPlay(){
         if(mNeedCheckPlay){
             handlePlay();
+        }
+    }
+
+    private void log(String info){
+        if(LOG_ENABLE){
+            LogUtils.d(TAG, "[MediaV2Activity]"+info);
         }
     }
 

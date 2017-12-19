@@ -260,9 +260,15 @@ public class StatedMediaPlay extends BasePlay {
             mMediaPlayer.setOnInfoListener(null);
             mMediaPlayer.setOnSeekCompleteListener(null);
             //release current media player
+
+            try{
+                mMediaPlayer.reset();
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
             try{
                 mMediaPlayer.release();
-            }catch (IllegalStateException ex){
+            }catch (Exception ex){
                 ex.printStackTrace();
             }
         }

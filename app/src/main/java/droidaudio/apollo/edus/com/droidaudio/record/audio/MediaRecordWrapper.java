@@ -6,6 +6,8 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.edus.apollo.common.utils.log.LogUtils;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -227,7 +229,7 @@ public class MediaRecordWrapper extends BaseRecord {
 
     private void log(String info) {
         if (LOG_ENABLE) {
-            Log.e(TAG, "[MediaRecordWrapper]" + info);
+            LogUtils.d(TAG, "[MediaRecordWrapper]" + info);
         }
     }
 }
