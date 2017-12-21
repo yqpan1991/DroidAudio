@@ -12,9 +12,16 @@ import java.io.File;
 
 public class RecordUtils {
     private static final String GROUP_NAME = "MediaRecordWrapper";
+    private static final String RECORD_REAL_GROUP_NAME = "RecordRealGroup";
     private static final int CONCURRENT_COUNT = 1;
 
-    public static Task getSingleRecordTask(){
+    public static Task getRecordCmdTask(){
+        Task task = TaskFactory.getInstance().getTask(GROUP_NAME, Priority.IMMEDIATE);
+        task.setConcurrentCount(1);
+        return task;
+    }
+
+    public static Task getSingleRealRecordTask(){
         Task task = TaskFactory.getInstance().getTask(GROUP_NAME, Priority.IMMEDIATE);
         task.setConcurrentCount(1);
         return task;

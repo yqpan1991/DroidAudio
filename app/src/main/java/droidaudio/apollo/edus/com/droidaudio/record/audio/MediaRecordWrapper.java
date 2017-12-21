@@ -4,7 +4,6 @@ import android.content.Context;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.edus.apollo.common.utils.log.LogUtils;
 
@@ -57,7 +56,7 @@ public class MediaRecordWrapper extends BaseRecord {
             return;
         }
         mIsRecording = true;
-        RecordUtils.getSingleRecordTask().start(new Runnable() {
+        RecordUtils.getRecordCmdTask().start(new Runnable() {
             @Override
             public void run() {
                 startRecordInner();
@@ -150,7 +149,7 @@ public class MediaRecordWrapper extends BaseRecord {
             log("---stopRecord when is recording, just return");
             return;
         }
-        RecordUtils.getSingleRecordTask().start(new Runnable() {
+        RecordUtils.getRecordCmdTask().start(new Runnable() {
             @Override
             public void run() {
                 stopRecordInner();
