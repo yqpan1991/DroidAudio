@@ -22,12 +22,12 @@ import droidaudio.apollo.edus.com.droidaudio.Utils.MainLooper;
 import droidaudio.apollo.edus.com.droidaudio.file.IOUtils;
 
 /**
- * 音频录制的封装类<br/>
+ * pcm录制的封装类<br/>
  * 所有向外暴露的方法,都需要在ui线程调用
  * Created by panda on 2017/12/20.
  */
 
-public class AudioRecordWrapper extends BaseRecord {
+public class PcmRecordWrapper extends BaseRecord {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -45,7 +45,7 @@ public class AudioRecordWrapper extends BaseRecord {
     private Semaphore mFileWriteSemaphore;
     private boolean LOG_ENABLE = true;
 
-    public AudioRecordWrapper(Context context){
+    public PcmRecordWrapper(Context context){
         if (context == null) {
             throw new RuntimeException("MediaRecordWrapper context cannot be null");
         }
@@ -267,6 +267,6 @@ public class AudioRecordWrapper extends BaseRecord {
         if(TextUtils.isEmpty(info)){
            return;
         }
-        LogUtils.e(TAG, "[AudioRecordWrapper] "+info);
+        LogUtils.e(TAG, "[PcmRecordWrapper] "+info);
     }
 }

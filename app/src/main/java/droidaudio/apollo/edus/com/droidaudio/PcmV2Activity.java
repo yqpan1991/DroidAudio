@@ -7,18 +7,18 @@ import android.view.View;
 
 import com.edus.apollo.common.utils.log.LogUtils;
 
-import droidaudio.apollo.edus.com.droidaudio.record.audio.AudioRecordWrapper;
+import droidaudio.apollo.edus.com.droidaudio.record.audio.PcmRecordWrapper;
 import droidaudio.apollo.edus.com.droidaudio.record.audio.IRecordListener;
 
 /**
- * 
+ *
  * 查看系统audio相关的用法
  */
-public class AudioV2Activity extends AppCompatActivity implements View.OnClickListener {
+public class PcmV2Activity extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = this.getClass().getSimpleName();
 
 
-    private AudioRecordWrapper mAudioRecordWrapper;
+    private PcmRecordWrapper mPcmRecordWrapper;
     private String mFilePath;
 
 
@@ -54,19 +54,19 @@ public class AudioV2Activity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void handleStopRecord() {
-        if(mAudioRecordWrapper != null){
+        if(mPcmRecordWrapper != null){
             log("realStop");
-            mAudioRecordWrapper.stopRecord();
+            mPcmRecordWrapper.stopRecord();
         }else{
             log("ignore stop");
         }
     }
 
     private void handleRecord() {
-        if(mAudioRecordWrapper == null){
-            mAudioRecordWrapper = new AudioRecordWrapper(this);
-            mAudioRecordWrapper.addRecordListener(mIRecordListener);
-            mAudioRecordWrapper.startRecord();
+        if(mPcmRecordWrapper == null){
+            mPcmRecordWrapper = new PcmRecordWrapper(this);
+            mPcmRecordWrapper.addRecordListener(mIRecordListener);
+            mPcmRecordWrapper.startRecord();
         }
     }
 
@@ -79,19 +79,19 @@ public class AudioV2Activity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void onStopRecord(String filePath) {
-            if(mAudioRecordWrapper != null){
-                mAudioRecordWrapper.removeRecordListener(this);
-                mAudioRecordWrapper = null;
+            if(mPcmRecordWrapper != null){
+                mPcmRecordWrapper.removeRecordListener(this);
+                mPcmRecordWrapper = null;
             }
             log("onStopRecord:"+filePath);
         }
 
         @Override
         public void onRecordException(String filePath, int errorCode, String errorMsg) {
-            if(mAudioRecordWrapper != null){
-                mAudioRecordWrapper.removeRecordListener(this);
-                mAudioRecordWrapper.stopRecord();
-                mAudioRecordWrapper = null;
+            if(mPcmRecordWrapper != null){
+                mPcmRecordWrapper.removeRecordListener(this);
+                mPcmRecordWrapper.stopRecord();
+                mPcmRecordWrapper = null;
             }
             log("onRecordException:"+filePath+",errorCode:"+errorCode+",errorMsg:"+errorMsg);
         }

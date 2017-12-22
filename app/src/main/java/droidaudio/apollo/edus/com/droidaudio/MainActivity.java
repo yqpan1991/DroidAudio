@@ -1,16 +1,9 @@
 package droidaudio.apollo.edus.com.droidaudio;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private final String TAG = this.getClass().getSimpleName();
@@ -22,7 +15,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.bt_media).setOnClickListener(this);
         findViewById(R.id.bt_media_v2).setOnClickListener(this);
         findViewById(R.id.bt_audio).setOnClickListener(this);
-        findViewById(R.id.bt_audio_v2).setOnClickListener(this);
+        findViewById(R.id.bt_pcm).setOnClickListener(this);
         findViewById(R.id.bt_media_test).setOnClickListener(this);
     }
 
@@ -38,8 +31,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.bt_audio:
                 startActivity(new Intent(this, AudioActivity.class));
                 break;
-            case R.id.bt_audio_v2:
-                startActivity(new Intent(this, AudioV2Activity.class));
+            case R.id.bt_pcm:
+                startActivity(new Intent(this, PcmV2Activity.class));
                 break;
             case R.id.bt_media_test:
                 startActivity(new Intent(this, MediaPlayerWrapperTestActivity.class));

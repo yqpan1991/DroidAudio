@@ -25,10 +25,10 @@
         android:text="audio record and track" />
 
     <Button
-        android:id="@+id/bt_audio_v2"
+        android:id="@+id/bt_pcm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="audio record and track v2" />
+        android:text="pcm record and track" />
 
     <Button
         android:id="@+id/bt_media_test"
