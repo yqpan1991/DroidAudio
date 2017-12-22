@@ -23,6 +23,11 @@
             android:name=".AudioActivity"
             android:screenOrientation="portrait"
             android:label="audio system" />
+
+        <activity
+            android:name=".AudioV2Activity"
+            android:screenOrientation="portrait"
+            android:label="audio system v2" />
         <activity
             android:name=".MediaActivity"
             android:screenOrientation="portrait"
@@ -30,7 +35,7 @@
         <activity
             android:name=".MediaV2Activity"
             android:screenOrientation="portrait"
-            android:label="audio system" />
+            android:label="audio system v2" />
 
         <activity
             android:name=".MediaPlayerWrapperTestActivity"

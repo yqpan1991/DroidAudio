@@ -22,7 +22,7 @@ public class RecordUtils {
     }
 
     public static Task getSingleRealRecordTask(){
-        Task task = TaskFactory.getInstance().getTask(GROUP_NAME, Priority.IMMEDIATE);
+        Task task = TaskFactory.getInstance().getTask(RECORD_REAL_GROUP_NAME, Priority.IMMEDIATE);
         task.setConcurrentCount(1);
         return task;
     }
