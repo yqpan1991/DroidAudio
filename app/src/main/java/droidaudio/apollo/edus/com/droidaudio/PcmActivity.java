@@ -7,10 +7,10 @@ import android.view.View;
 
 import com.edus.apollo.common.utils.log.LogUtils;
 
-import droidaudio.apollo.edus.com.droidaudio.media.IPlayerListener;
-import droidaudio.apollo.edus.com.droidaudio.record.audio.PcmAudioPlay;
-import droidaudio.apollo.edus.com.droidaudio.record.audio.PcmRecordWrapper;
-import droidaudio.apollo.edus.com.droidaudio.record.audio.IRecordListener;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.audio.PcmAudioRecord;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IPlayerListener;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.audio.PcmAudioPlay;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IRecordListener;
 
 /**
  *
@@ -20,7 +20,7 @@ public class PcmActivity extends AppCompatActivity implements View.OnClickListen
     private final String TAG = this.getClass().getSimpleName();
 
 
-    private PcmRecordWrapper mPcmRecordWrapper;
+    private PcmAudioRecord mPcmAudioRecord;
     private String mFilePath;
     private PcmAudioPlay mPcmAudioPlay;
     private boolean mNeedCheckPlay;
@@ -96,8 +96,8 @@ public class PcmActivity extends AppCompatActivity implements View.OnClickListen
     }
 
     private void handlePlayRecord() {
-        if(mPcmRecordWrapper != null){
-            mPcmRecordWrapper.stopRecord();
+        if(mPcmAudioRecord != null){
+            mPcmAudioRecord.stopRecord();
             mNeedCheckPlay = true;
         }
         if(mPcmAudioPlay == null && !TextUtils.isEmpty(mFilePath)){
@@ -108,19 +108,19 @@ public class PcmActivity extends AppCompatActivity implements View.OnClickListen
     }
 
     private void handleStopRecord() {
-        if(mPcmRecordWrapper != null){
+        if(mPcmAudioRecord != null){
             log("realStop");
-            mPcmRecordWrapper.stopRecord();
+            mPcmAudioRecord.stopRecord();
         }else{
             log("ignore stop");
         }
     }
 
     private void handleRecord() {
-        if(mPcmRecordWrapper == null){
-            mPcmRecordWrapper = new PcmRecordWrapper(this);
-            mPcmRecordWrapper.addRecordListener(mIRecordListener);
-            mPcmRecordWrapper.startRecord();
+        if(mPcmAudioRecord == null){
+            mPcmAudioRecord = new PcmAudioRecord(this);
+            mPcmAudioRecord.addRecordListener(mIRecordListener);
+            mPcmAudioRecord.startRecord();
         }
         handleStopPlay();
     }
@@ -134,9 +134,9 @@ public class PcmActivity extends AppCompatActivity implements View.OnClickListen
 
         @Override
         public void onStopRecord(String filePath) {
-            if(mPcmRecordWrapper != null){
-                mPcmRecordWrapper.removeRecordListener(this);
-                mPcmRecordWrapper = null;
+            if(mPcmAudioRecord != null){
+                mPcmAudioRecord.removeRecordListener(this);
+                mPcmAudioRecord = null;
             }
             log("onStopRecord:"+filePath);
             checkPlay();
@@ -144,10 +144,10 @@ public class PcmActivity extends AppCompatActivity implements View.OnClickListen
 
         @Override
         public void onRecordException(String filePath, int errorCode, String errorMsg) {
-            if(mPcmRecordWrapper != null){
-                mPcmRecordWrapper.removeRecordListener(this);
-                mPcmRecordWrapper.stopRecord();
-                mPcmRecordWrapper = null;
+            if(mPcmAudioRecord != null){
+                mPcmAudioRecord.removeRecordListener(this);
+                mPcmAudioRecord.stopRecord();
+                mPcmAudioRecord = null;
             }
             log("onRecordException:"+filePath+",errorCode:"+errorCode+",errorMsg:"+errorMsg);
         }

@@ -9,7 +9,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import droidaudio.apollo.edus.com.droidaudio.media.IPlayerListener;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IPlayerListener;
 
 /**
  * Created by PandaPan on 2017/2/8.

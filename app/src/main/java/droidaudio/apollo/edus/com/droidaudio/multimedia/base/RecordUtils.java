@@ -1,10 +1,8 @@
-package droidaudio.apollo.edus.com.droidaudio.record.audio;
+package droidaudio.apollo.edus.com.droidaudio.multimedia.base;
 
 import com.edus.apollo.common.biz.task.Priority;
 import com.edus.apollo.common.biz.task.Task;
 import com.edus.apollo.common.biz.task.TaskFactory;
-
-import java.io.File;
 
 /**
  * Created by panda on 2017/12/17.

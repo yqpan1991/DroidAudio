@@ -1,4 +1,4 @@
-package droidaudio.apollo.edus.com.droidaudio.record.audio;
+package droidaudio.apollo.edus.com.droidaudio.multimedia.base;
 
 import com.edus.apollo.common.biz.task.Priority;
 import com.edus.apollo.common.biz.task.Task;

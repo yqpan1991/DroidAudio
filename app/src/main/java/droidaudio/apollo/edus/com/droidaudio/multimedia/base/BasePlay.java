@@ -1,15 +1,10 @@
-package droidaudio.apollo.edus.com.droidaudio.record.audio;
-
-import android.os.Handler;
-import android.os.Looper;
+package droidaudio.apollo.edus.com.droidaudio.multimedia.base;
 
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import droidaudio.apollo.edus.com.droidaudio.Utils.MainLooper;
-import droidaudio.apollo.edus.com.droidaudio.media.IPlayer;
-import droidaudio.apollo.edus.com.droidaudio.media.IPlayerListener;
 
 /**
  * Created by PandaPan on 2017/2/7.

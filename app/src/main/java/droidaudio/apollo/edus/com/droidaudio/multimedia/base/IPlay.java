@@ -1,6 +1,4 @@
-package droidaudio.apollo.edus.com.droidaudio.record.audio;
-
-import droidaudio.apollo.edus.com.droidaudio.media.IPlayerListener;
+package droidaudio.apollo.edus.com.droidaudio.multimedia.base;
 
 /**
  * Created by panda on 2017/12/18.

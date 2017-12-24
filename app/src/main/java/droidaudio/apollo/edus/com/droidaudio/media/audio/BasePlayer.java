@@ -4,7 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import droidaudio.apollo.edus.com.droidaudio.media.IPlayer;
-import droidaudio.apollo.edus.com.droidaudio.media.IPlayerListener;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IPlayerListener;
 
 /**
  * Created by PandaPan on 2017/2/7.

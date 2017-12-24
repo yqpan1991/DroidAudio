@@ -1,4 +1,4 @@
-package droidaudio.apollo.edus.com.droidaudio.record.audio;
+package droidaudio.apollo.edus.com.droidaudio.multimedia.audio;
 
 import android.media.AudioFormat;
 import android.media.AudioManager;
@@ -16,6 +16,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import droidaudio.apollo.edus.com.droidaudio.file.FileUtils;
 import droidaudio.apollo.edus.com.droidaudio.file.IOUtils;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.BasePlay;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IPlay;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.PlayUtils;
 
 /**
  * AudioTrack pcm的播放

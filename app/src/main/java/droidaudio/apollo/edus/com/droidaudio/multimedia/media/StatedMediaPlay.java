@@ -1,4 +1,4 @@
-package droidaudio.apollo.edus.com.droidaudio.record.audio;
+package droidaudio.apollo.edus.com.droidaudio.multimedia.media;
 
 import android.media.MediaPlayer;
 import android.text.TextUtils;
@@ -6,7 +6,8 @@ import android.util.Log;
 
 import java.io.IOException;
 
-import droidaudio.apollo.edus.com.droidaudio.media.IPlayer;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.BasePlay;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IPlay;
 
 /**
  * Created by PandaPan on 2017/2/6.
@@ -66,7 +67,7 @@ public class StatedMediaPlay extends BasePlay {
 
     @Override
     public void pause() {
-        if(mState == IPlayer.RUNNING){
+        if(mState == IPlay.RUNNING){
             try{
                 if(mMediaPlayer.isPlaying()){
                     mMediaPlayer.pause();
@@ -75,7 +76,7 @@ public class StatedMediaPlay extends BasePlay {
             }catch (IllegalStateException ex){
                 handleErrorEncounted(0 , 0);
             }
-        }else if(mState == IPlayer.IDLE || mState == IPlayer.INITIALIZED){
+        }else if(mState == IPlay.IDLE || mState == IPlay.INITIALIZED){
             handleErrorEncounted(0, 0);
         }
     }
@@ -84,7 +85,7 @@ public class StatedMediaPlay extends BasePlay {
     public void stop() {
         //检查状态和文件,如果不合法,释放资源,然后向外报错
         //如果合法,执行stop的操作,并且设置当前的播放状态
-        if(mState == IPlayer.RUNNING || mState == IPlayer.PREPARED || mState == IPlayer.PREPARING || mState == IPlayer.INITIALIZED){
+        if(mState == IPlay.RUNNING || mState == IPlay.PREPARED || mState == IPlay.PREPARING || mState == IPlay.INITIALIZED){
             String filePath = mPlayingUrl;
             init();
             notifyOnStopped(filePath);
@@ -96,7 +97,7 @@ public class StatedMediaPlay extends BasePlay {
     @Override
     public void resume() {
         //检查状态,是否合法,然后调用start方法即可
-        if(mState == IPlayer.RUNNING){
+        if(mState == IPlay.RUNNING){
             try{
                 if(mMediaPlayer.isPlaying()){
                     //do nothing
@@ -107,7 +108,7 @@ public class StatedMediaPlay extends BasePlay {
             }catch (IllegalStateException ex){
                 handleErrorEncounted(0, 0);
             }
-        }else if(mState == IPlayer.IDLE || mState == IPlayer.INITIALIZED){
+        }else if(mState == IPlay.IDLE || mState == IPlay.INITIALIZED){
             seekTo(0);
         }
     }
@@ -133,7 +134,7 @@ public class StatedMediaPlay extends BasePlay {
             handleErrorEncounted(0,0);
             return;
         }
-        if(mState == IPlayer.IDLE){
+        if(mState == IPlay.IDLE){
             try {
                 //TODO: 是否还需要设置其他参数
                 mMediaPlayer.setDataSource(mPlayingUrl);
@@ -142,18 +143,18 @@ public class StatedMediaPlay extends BasePlay {
                 handleErrorEncounted(0, 0);
                 return;
             }
-            mState = IPlayer.INITIALIZED;
+            mState = IPlay.INITIALIZED;
         }
-        if(mState == IPlayer.INITIALIZED){
-            mState = IPlayer.PREPARING;
+        if(mState == IPlay.INITIALIZED){
+            mState = IPlay.PREPARING;
             notifyOnPreparing(mPlayingUrl);
             mMediaPlayer.prepareAsync();
-        }else if(mState == IPlayer.PREPARING){
+        }else if(mState == IPlay.PREPARING){
             //when prepared,remember seekTo
-        }else if(mState == IPlayer.PREPARED){//just start,then check seekTo
+        }else if(mState == IPlay.PREPARED){//just start,then check seekTo
             notifyOnPrepared(mPlayingUrl);
             handlePrepared();
-        }else if(mState == IPlayer.RUNNING){
+        }else if(mState == IPlay.RUNNING){
             checkSeekPlay();
         }else{
             Log.e(TAG, "seekTo state not right, state:"+mState);
@@ -162,8 +163,8 @@ public class StatedMediaPlay extends BasePlay {
     }
 
     private void handlePrepared() {
-        if(mState == IPlayer.PREPARED){
-            mState = IPlayer.RUNNING;
+        if(mState == IPlay.PREPARED){
+            mState = IPlay.RUNNING;
             try{
                 mMediaPlayer.start();
                 checkNotifyOnPlay();
@@ -180,7 +181,7 @@ public class StatedMediaPlay extends BasePlay {
     }
 
     private void checkSeekPlay() {
-        if(mState == IPlayer.RUNNING){
+        if(mState == IPlay.RUNNING){
             if(mTargetPosition >= 0){
                 int targetPosition = mTargetPosition;
                 mTargetPosition = -1;
@@ -206,7 +207,7 @@ public class StatedMediaPlay extends BasePlay {
 
     @Override
     public int getDuration() {
-        if(mState == IPlayer.PREPARED || mState == IPlayer.RUNNING){
+        if(mState == IPlay.PREPARED || mState == IPlay.RUNNING){
             return mMediaPlayer.getDuration();
         }
         return -1;
@@ -214,7 +215,7 @@ public class StatedMediaPlay extends BasePlay {
 
     @Override
     public int getCurrentPosition() {
-        if(mState == IPlayer.PREPARED || mState == IPlayer.RUNNING || mState == IPlayer.INITIALIZED || mState == IPlayer.IDLE){
+        if(mState == IPlay.PREPARED || mState == IPlay.RUNNING || mState == IPlay.INITIALIZED || mState == IPlay.IDLE){
             return mMediaPlayer.getCurrentPosition();
         }
         return -1;
@@ -223,7 +224,7 @@ public class StatedMediaPlay extends BasePlay {
     @Override
     public boolean isPlaying() {
         boolean result = false;
-        if(mState == IPlayer.PREPARING){
+        if(mState == IPlay.PREPARING){
             return false;
         }
         try{
@@ -278,7 +279,7 @@ public class StatedMediaPlay extends BasePlay {
         mMediaPlayer.setOnCompletionListener(mOnCompletionListener);
         mMediaPlayer.setOnInfoListener(mOnInfoListener);
         mMediaPlayer.setOnSeekCompleteListener(mOnSeekCompleteListener);
-        mState = IPlayer.IDLE;
+        mState = IPlay.IDLE;
         mTargetPosition = -1;
         mPlayingUrl = null;
     }
@@ -286,8 +287,8 @@ public class StatedMediaPlay extends BasePlay {
     private MediaPlayer.OnPreparedListener mOnPreparedListener = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
-            if(mState == IPlayer.INITIALIZED || mState == IPlayer.PREPARING){
-                mState = IPlayer.PREPARED;
+            if(mState == IPlay.INITIALIZED || mState == IPlay.PREPARING){
+                mState = IPlay.PREPARED;
                 notifyOnPrepared(mPlayingUrl);
                 handlePrepared();
             }else{
@@ -305,9 +306,9 @@ public class StatedMediaPlay extends BasePlay {
     };
 
     private void handleSeekComplete() {
-        if(mState == IPlayer.PREPARED){
+        if(mState == IPlay.PREPARED){
             handlePrepared();
-        }else if(mState == IPlayer.RUNNING){
+        }else if(mState == IPlay.RUNNING){
             checkSeekPlay();
         }else{
             //state not right

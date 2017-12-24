@@ -18,7 +18,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import droidaudio.apollo.edus.com.droidaudio.media.IPlayerListener;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IPlayerListener;
 import droidaudio.apollo.edus.com.droidaudio.media.audio.StatedMediaPlayer;
 
 /**

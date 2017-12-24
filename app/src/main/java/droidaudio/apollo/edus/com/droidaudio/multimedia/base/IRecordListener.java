@@ -1,4 +1,4 @@
-package droidaudio.apollo.edus.com.droidaudio.record.audio;
+package droidaudio.apollo.edus.com.droidaudio.multimedia.base;
 
 /**
  * Created by panda on 2017/12/17.

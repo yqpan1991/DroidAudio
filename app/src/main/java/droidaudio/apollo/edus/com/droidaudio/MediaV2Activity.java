@@ -2,21 +2,19 @@ package droidaudio.apollo.edus.com.droidaudio;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.edus.apollo.common.utils.log.LogUtils;
 
-import droidaudio.apollo.edus.com.droidaudio.media.IPlayerListener;
-import droidaudio.apollo.edus.com.droidaudio.record.audio.IPlay;
-import droidaudio.apollo.edus.com.droidaudio.record.audio.IRecord;
-import droidaudio.apollo.edus.com.droidaudio.record.audio.IRecordListener;
-import droidaudio.apollo.edus.com.droidaudio.record.audio.MediaRecordWrapper;
-import droidaudio.apollo.edus.com.droidaudio.record.audio.StatedMediaPlay;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IPlayerListener;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IPlay;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IRecord;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IRecordListener;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.media.MediaRecordWrapper;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.media.StatedMediaPlay;
 
 /**
  * 学习使用系统Media相关的使用

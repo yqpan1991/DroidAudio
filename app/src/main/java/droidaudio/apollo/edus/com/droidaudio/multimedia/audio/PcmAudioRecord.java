@@ -1,4 +1,4 @@
-package droidaudio.apollo.edus.com.droidaudio.record.audio;
+package droidaudio.apollo.edus.com.droidaudio.multimedia.audio;
 
 import android.content.Context;
 import android.media.AudioFormat;
@@ -7,7 +7,6 @@ import android.media.AudioTrack;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.edus.apollo.common.utils.log.LogUtils;
 
@@ -20,6 +19,9 @@ import java.util.concurrent.Semaphore;
 
 import droidaudio.apollo.edus.com.droidaudio.Utils.MainLooper;
 import droidaudio.apollo.edus.com.droidaudio.file.IOUtils;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.BaseRecord;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IRecordListener;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.RecordUtils;
 
 /**
  * pcm录制的封装类<br/>
@@ -27,7 +29,7 @@ import droidaudio.apollo.edus.com.droidaudio.file.IOUtils;
  * Created by panda on 2017/12/20.
  */
 
-public class PcmRecordWrapper extends BaseRecord {
+public class PcmAudioRecord extends BaseRecord {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -45,12 +47,11 @@ public class PcmRecordWrapper extends BaseRecord {
     private Semaphore mFileWriteSemaphore;
     private boolean LOG_ENABLE = true;
 
-    public PcmRecordWrapper(Context context){
+    public PcmAudioRecord(Context context){
         if (context == null) {
             throw new RuntimeException("MediaRecordWrapper context cannot be null");
         }
         mContext = context.getApplicationContext();
-        //todo: 此处需要测试
         mFileWriteSemaphore = new Semaphore(0);
     }
 
@@ -268,6 +269,6 @@ public class PcmRecordWrapper extends BaseRecord {
         if(TextUtils.isEmpty(info)){
            return;
         }
-        LogUtils.e(TAG, "[PcmRecordWrapper] "+info);
+        LogUtils.e(TAG, "[PcmAudioRecord] "+info);
     }
 }

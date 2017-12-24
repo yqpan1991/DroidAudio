@@ -1,4 +1,4 @@
-package droidaudio.apollo.edus.com.droidaudio.record.audio;
+package droidaudio.apollo.edus.com.droidaudio.multimedia.media;
 
 import android.content.Context;
 import android.media.MediaRecorder;
@@ -11,6 +11,9 @@ import java.io.File;
 import java.io.IOException;
 
 import droidaudio.apollo.edus.com.droidaudio.Utils.MainLooper;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.RecordUtils;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.BaseRecord;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IRecordListener;
 
 /**
  * 自己记录状态,不主动进行停止,让外面操作,保证数据流的唯一
