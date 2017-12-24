@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(this, AudioActivity.class));
                 break;
             case R.id.bt_pcm:
-                startActivity(new Intent(this, PcmV2Activity.class));
+                startActivity(new Intent(this, PcmActivity.class));
                 break;
             case R.id.bt_media_test:
                 startActivity(new Intent(this, MediaPlayerWrapperTestActivity.class));

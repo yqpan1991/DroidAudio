@@ -25,7 +25,7 @@
             android:label="audio system" />
 
         <activity
-            android:name=".PcmV2Activity"
+            android:name=".PcmActivity"
             android:screenOrientation="portrait"
             android:label="audio system v2" />
         <activity
