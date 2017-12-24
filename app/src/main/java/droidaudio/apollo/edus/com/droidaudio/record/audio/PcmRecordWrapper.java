@@ -50,7 +50,8 @@ public class PcmRecordWrapper extends BaseRecord {
             throw new RuntimeException("MediaRecordWrapper context cannot be null");
         }
         mContext = context.getApplicationContext();
-        mFileWriteSemaphore = new Semaphore(1);
+        //todo: 此处需要测试
+        mFileWriteSemaphore = new Semaphore(0);
     }
 
     @Override
