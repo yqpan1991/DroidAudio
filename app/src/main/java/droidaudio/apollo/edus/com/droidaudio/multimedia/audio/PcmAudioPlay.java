@@ -3,6 +3,7 @@ package droidaudio.apollo.edus.com.droidaudio.multimedia.audio;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.media.MediaPlayer;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -87,9 +88,8 @@ public class PcmAudioPlay extends BasePlay {
         if(!FileUtils.isFileExists(mFilePath)){
             //设置hasError, 通知异常
             mHasError = true;
-            //todo: 错误码未定,文件不存在
             stopInner();
-            notifyOnError(mFilePath, 0, 0);
+            notifyOnError(mFilePath, MediaPlayer.MEDIA_ERROR_UNKNOWN, MediaPlayer.MEDIA_ERROR_IO);
             return;
         }
         mState.set(IPlay.PREPARING);
@@ -108,15 +108,13 @@ public class PcmAudioPlay extends BasePlay {
             log("file not found, path:"+ mFilePath);
             mHasError = true;
             stopInner();
-            //todo: 异常code
-            notifyOnError(mFilePath, 0, 0);
+            notifyOnError(mFilePath, MediaPlayer.MEDIA_ERROR_UNKNOWN, MediaPlayer.MEDIA_ERROR_IO);
             return;
         }
         if(mFileLength <= 0){
             mHasError = true;
             stopInner();
-            //todo: 异常code
-            notifyOnError(mFilePath, 0, 0 );
+            notifyOnError(mFilePath, MediaPlayer.MEDIA_ERROR_UNKNOWN, MediaPlayer.MEDIA_ERROR_IO);
             return;
         }
         mState.set(IPlay.PREPARED);
@@ -190,9 +188,9 @@ public class PcmAudioPlay extends BasePlay {
         } catch (IOException e) {
             e.printStackTrace();
             mHasError = true;
-            stopInner();
-            //todo: 异常code
-            notifyOnError(mFilePath, 0, 0);
+            stop();
+            notifyOnError(mFilePath, MediaPlayer.MEDIA_ERROR_UNKNOWN, MediaPlayer.MEDIA_ERROR_IO);
+            return;
         }  finally {
             // 在stop时正式关闭文件,否则,需要记录更多内容关于位置的信息的
         }
@@ -211,7 +209,7 @@ public class PcmAudioPlay extends BasePlay {
                 log("file Size not match for intercept, smaller than initLength, consider as error");
                 mHasError = true;
                 stop();
-                notifyOnError(mFilePath, 0 , 0);
+                notifyOnError(mFilePath, MediaPlayer.MEDIA_ERROR_UNKNOWN, MediaPlayer.MEDIA_ERROR_IO);
             }
         }
         mFileReadSemaphore.release();
@@ -231,28 +229,26 @@ public class PcmAudioPlay extends BasePlay {
     private void pauseInner() {
         //1. 设置为暂停即可
         if(isAudioTrackPlaying()){
+            int errorCode = 0;
             try{
                 mAudioTrack.pause();
             }catch (Exception ex){
                 ex.printStackTrace();
                 log("pauseInner pauseAudioTrack exception:"+ex.toString());
                 mHasError = true;
-                stopInner();
-                //todo: 错误提示信息
-                notifyOnError(mFilePath, 0, 0);
+                errorCode = IPlay.MEDIA_ERROR_ILLEGAL_STATE;
             }
             try {
                 mFileReadSemaphore.acquire();
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
                 log("pauseInner acquire permit exception:"+ex.toString());
-                mHasError = true;
-                stopInner();
-                //todo: 错误提示信息
-                notifyOnError(mFilePath, 0, 0);
             }
             if(!mHasError && isAudioTrackPaused()){
                 notifyOnPause(mFilePath);
+            }else if(mHasError){
+                stopInner();
+                notifyOnError(mFilePath, errorCode, 0);
             }
         }
     }
@@ -427,12 +423,6 @@ public class PcmAudioPlay extends BasePlay {
 
     private boolean isAudioTrackValid(){
         return mAudioTrack != null && mAudioTrack.getState() == AudioTrack.STATE_INITIALIZED;
-    }
-
-    @Override
-    protected void notifyOnError(String filePath, int what, int extra) {
-        //todo: 内部停止播放
-        super.notifyOnError(filePath, what, extra);
     }
 
     private void log(String info){

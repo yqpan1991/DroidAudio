@@ -5,6 +5,12 @@ package droidaudio.apollo.edus.com.droidaudio.multimedia.base;
  */
 
 public interface IPlay {
+
+    /**
+     * operate media by wrong operation,caused IllegalStateException
+     */
+    public static final int MEDIA_ERROR_ILLEGAL_STATE = 10000;
+
     /**
      * mediaplayer is idle
      */
