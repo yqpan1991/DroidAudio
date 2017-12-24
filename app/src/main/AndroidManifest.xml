@@ -19,28 +19,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".AudioActivity"
-            android:screenOrientation="portrait"
-            android:label="audio system" />
 
         <activity
             android:name=".PcmActivity"
             android:screenOrientation="portrait"
             android:label="audio system v2" />
         <activity
-            android:name=".MediaActivity"
-            android:screenOrientation="portrait"
-            android:label="media system" />
-        <activity
             android:name=".MediaV2Activity"
             android:screenOrientation="portrait"
             android:label="audio system v2" />
 
-        <activity
-            android:name=".MediaPlayerWrapperTestActivity"
-            android:screenOrientation="portrait"
-            android:label="media system" />
     </application>
 
 </manifest>

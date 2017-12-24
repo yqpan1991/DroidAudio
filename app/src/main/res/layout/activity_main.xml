@@ -7,34 +7,15 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/bt_media"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="media record and player" />
-
-    <Button
         android:id="@+id/bt_media_v2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="media record and player v2" />
-
-    <Button
-        android:id="@+id/bt_audio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="audio record and track" />
+        android:text="media record and player" />
 
     <Button
         android:id="@+id/bt_pcm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="pcm record and track" />
-
-    <Button
-        android:id="@+id/bt_media_test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="音乐播放测试" />
-
 
 </LinearLayout>
