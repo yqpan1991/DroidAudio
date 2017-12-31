@@ -81,4 +81,9 @@ public class PcmAudioRecord extends AudioRecordWrapper {
         //释放资源
     }
 
+    @Override
+    protected String getFileSuffix() {
+        return "pcm";
+    }
+
 }

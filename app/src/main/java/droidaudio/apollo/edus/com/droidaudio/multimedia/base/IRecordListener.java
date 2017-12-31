@@ -11,6 +11,7 @@ public interface IRecordListener {
     int ERROR_FILE_WRITE_EXCEPTION = 3;
     int ERROR_INNER_AUDIO_RECORD = 4;
     int ERROR_RECORD_START_EXCEPTION = 5;
+    int ERROR_RECORD_TYPE_NOT_SUPPORTED= 6;
 
     void onStartRecord(String filePath);
 

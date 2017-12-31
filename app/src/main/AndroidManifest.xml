@@ -23,7 +23,11 @@
         <activity
             android:name=".PcmActivity"
             android:screenOrientation="portrait"
-            android:label="audio system v2" />
+            android:label="audio system-pcm" />
+        <activity
+            android:name=".OpusActivity"
+            android:screenOrientation="portrait"
+            android:label="audio system-opus" />
         <activity
             android:name=".MediaV2Activity"
             android:screenOrientation="portrait"

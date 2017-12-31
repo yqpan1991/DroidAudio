@@ -18,4 +18,10 @@
         android:layout_height="wrap_content"
         android:text="pcm record and track" />
 
+    <Button
+        android:id="@+id/bt_opus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="opus record and track" />
+
 </LinearLayout>

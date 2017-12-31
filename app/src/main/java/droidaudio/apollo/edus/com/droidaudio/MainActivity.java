@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         findViewById(R.id.bt_media_v2).setOnClickListener(this);
         findViewById(R.id.bt_pcm).setOnClickListener(this);
+        findViewById(R.id.bt_opus).setOnClickListener(this);
         Toast.makeText(this, "isSucceed?"+ OpusTool.isLoadSucceed(), Toast.LENGTH_SHORT).show();
     }
 
@@ -28,6 +29,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.bt_pcm:
                 startActivity(new Intent(this, PcmActivity.class));
+                break;
+            case R.id.bt_opus:
+                startActivity(new Intent(this, OpusActivity.class));
                 break;
         }
     }

@@ -236,8 +236,10 @@ public abstract class AudioRecordWrapper extends BaseRecord {
         }
         File file = new File(dir);
         file.mkdirs();
-        return dir + File.separator + "record-" + System.currentTimeMillis() + ".pcm";
+        return dir + File.separator + "record-" + System.currentTimeMillis() + "." + getFileSuffix();
     }
+
+    protected abstract String getFileSuffix();
 
     protected void logInfo(String info){
         if(!LOG_ENABLE){
