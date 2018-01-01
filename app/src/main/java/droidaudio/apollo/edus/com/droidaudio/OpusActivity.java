@@ -24,6 +24,7 @@ public class OpusActivity extends AppCompatActivity implements View.OnClickListe
     private OpusAudioRecord mOpusAudioRecord;
     private String mFilePath;
     private OpusAudioTrack mOpusAudioTrack;
+    private boolean mNeedCheckPlay;
 
 
     @Override
@@ -93,6 +94,11 @@ public class OpusActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, "filePath is null, cannot play:", Toast.LENGTH_SHORT).show();
             return;
         }
+        if(mOpusAudioRecord != null){
+            mNeedCheckPlay = true;
+            mOpusAudioRecord.stopRecord();
+            return;
+        }
         if(mOpusAudioTrack == null){
             mOpusAudioTrack = new OpusAudioTrack();
             mOpusAudioTrack.addPlayListener(mIPlayListener);
@@ -104,6 +110,7 @@ public class OpusActivity extends AppCompatActivity implements View.OnClickListe
     protected void onPause() {
         super.onPause();
         handleStopRecord();
+        handleStopPlay();
     }
 
 
@@ -117,6 +124,10 @@ public class OpusActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void handleRecord() {
+        if(mOpusAudioTrack != null){
+            mOpusAudioTrack.stop();
+        }
+
         if(mOpusAudioRecord == null){
             mOpusAudioRecord = new OpusAudioRecord(this);
             mOpusAudioRecord.addRecordListener(mIRecordListener);
@@ -136,6 +147,7 @@ public class OpusActivity extends AppCompatActivity implements View.OnClickListe
             if(mOpusAudioRecord != null){
                 mOpusAudioRecord.removeRecordListener(this);
                 mOpusAudioRecord = null;
+                checkPlay();
             }
             log("onStopRecord:"+filePath);
         }
@@ -150,6 +162,13 @@ public class OpusActivity extends AppCompatActivity implements View.OnClickListe
             log("onRecordException:"+filePath+",errorCode:"+errorCode+",errorMsg:"+errorMsg);
         }
     };
+
+    private void checkPlay() {
+        if(mNeedCheckPlay){
+            mNeedCheckPlay = false;
+            handlePlay();
+        }
+    }
 
     private IPlayerListener mIPlayListener = new IPlayerListener() {
         @Override
