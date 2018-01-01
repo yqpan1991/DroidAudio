@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.edus.apollo.opuslib.OpusTool;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = this.getClass().getSimpleName();
 
     @Override
@@ -19,12 +19,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.bt_pcm).setOnClickListener(this);
         findViewById(R.id.bt_opus).setOnClickListener(this);
         findViewById(R.id.bt_media_by_manager).setOnClickListener(this);
-        Toast.makeText(this, "isSucceed?"+ OpusTool.isLoadSucceed(), Toast.LENGTH_SHORT).show();
+        findViewById(R.id.bt_pcm_by_manager).setOnClickListener(this);
+        findViewById(R.id.bt_opus_by_manager).setOnClickListener(this);
+        Toast.makeText(this, "isSucceed?" + OpusTool.isLoadSucceed(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.bt_media:
                 startActivity(new Intent(this, MediaActivity.class));
                 break;
@@ -36,6 +38,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.bt_media_by_manager:
                 startActivity(new Intent(this, MediaByManagerActivity.class));
+                break;
+            case R.id.bt_pcm_by_manager:
+                startActivity(new Intent(this, PcmByManagerActivity.class));
+                break;
+            case R.id.bt_opus_by_manager:
+                startActivity(new Intent(this, OpusByManagerActivity.class));
                 break;
         }
     }

@@ -37,6 +37,14 @@
             android:name=".MediaByManagerActivity"
             android:screenOrientation="portrait"
             android:label="audio system by manager" />
+        <activity
+            android:name=".PcmByManagerActivity"
+            android:screenOrientation="portrait"
+            android:label="pcm by manager" />
+        <activity
+            android:name=".OpusByManagerActivity"
+            android:screenOrientation="portrait"
+            android:label="opus by manager" />
 
     </application>
 

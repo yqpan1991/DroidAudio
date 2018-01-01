@@ -37,4 +37,16 @@
         android:layout_height="wrap_content"
         android:text="media record and player by manager" />
 
+    <Button
+        android:id="@+id/bt_pcm_by_manager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="pcm record and player by manager" />
+
+    <Button
+        android:id="@+id/bt_opus_by_manager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="opus record and player by manager" />
+
 </LinearLayout>
