@@ -11,7 +11,7 @@ import com.edus.apollo.common.utils.log.LogUtils;
 import java.io.File;
 import java.util.concurrent.Semaphore;
 
-import droidaudio.apollo.edus.com.droidaudio.Utils.MainLooper;
+import droidaudio.apollo.edus.com.droidaudio.utils.MainLooper;
 import droidaudio.apollo.edus.com.droidaudio.multimedia.base.BaseRecord;
 import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IRecordListener;
 import droidaudio.apollo.edus.com.droidaudio.multimedia.base.RecordUtils;

@@ -1,4 +1,4 @@
-package droidaudio.apollo.edus.com.droidaudio.Utils;
+package droidaudio.apollo.edus.com.droidaudio.utils;
 
 import android.os.Handler;
 import android.os.Looper;

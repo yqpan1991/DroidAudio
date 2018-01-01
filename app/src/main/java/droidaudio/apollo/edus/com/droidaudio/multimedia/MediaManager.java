@@ -230,6 +230,7 @@ public class MediaManager implements IPlay{
                         startCurrentPlayer(url, pos);
                     }
                 };
+                mPlayer.stop();
             }
         }else{
             startCurrentPlayer(url, pos);

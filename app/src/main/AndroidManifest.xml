@@ -45,6 +45,10 @@
             android:name=".OpusByManagerActivity"
             android:screenOrientation="portrait"
             android:label="opus by manager" />
+        <activity
+            android:name=".MediaListActivity"
+            android:screenOrientation="portrait"
+            android:label="media list activity" />
 
     </application>
 
