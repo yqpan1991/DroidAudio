@@ -19,8 +19,8 @@ import droidaudio.apollo.edus.com.droidaudio.multimedia.media.StatedMediaPlay;
 /**
  * 学习使用系统Media相关的使用
  */
-public class MediaV2Activity extends AppCompatActivity implements View.OnClickListener {
-    private static final String TAG = MediaV2Activity.class.getSimpleName();
+public class MediaActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = MediaActivity.class.getSimpleName();
     private IRecord mRecord;
     private IPlay mPlay;
     private String mFilePath;
@@ -224,7 +224,7 @@ public class MediaV2Activity extends AppCompatActivity implements View.OnClickLi
 
     private void log(String info){
         if(LOG_ENABLE){
-            LogUtils.d(TAG, "[MediaV2Activity]"+info);
+            LogUtils.d(TAG, "[MediaActivity]"+info);
         }
     }
 

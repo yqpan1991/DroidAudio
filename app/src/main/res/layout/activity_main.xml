@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/bt_media_v2"
+        android:id="@+id/bt_media"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="media record and player" />
@@ -23,5 +23,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="opus record and track" />
+
+    <View
+        android:layout_width="match_parent"
+        android:background="#00ff00"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_height="0.5dp"/>
+
+    <Button
+        android:id="@+id/bt_media_by_manager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="media record and player by manager" />
 
 </LinearLayout>

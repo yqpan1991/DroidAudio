@@ -11,6 +11,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:name=".application.BaseApplication"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -29,9 +30,13 @@
             android:screenOrientation="portrait"
             android:label="audio system-opus" />
         <activity
-            android:name=".MediaV2Activity"
+            android:name=".MediaActivity"
             android:screenOrientation="portrait"
-            android:label="audio system v2" />
+            android:label="audio system" />
+        <activity
+            android:name=".MediaByManagerActivity"
+            android:screenOrientation="portrait"
+            android:label="audio system by manager" />
 
     </application>
 

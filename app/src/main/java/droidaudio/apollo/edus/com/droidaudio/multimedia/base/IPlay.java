@@ -47,22 +47,22 @@ public interface IPlay {
     void play(String url, int pos);
 
     /**
-     * 暂停播放,如果没有播放的音频文件,会回调播放错误
+     * 暂停播放,如果没有播放的音频文件,会忽略
      */
     void pause();
 
     /**
-     * 停止播放,会清空当前播放的信息,如果当前没有播放的文件,会回调播放错误
+     * 停止播放,会清空当前播放的信息,如果当前没有播放的文件,会忽略
      */
     void stop();
 
     /**
-     * 继续播放,如果没有播放的音频文件,会回调播放错误
+     * 继续播放,如果没有播放的音频文件,会忽略
      */
     void resume();
 
     /**
-     * seekTo操作,如果当前没有播放的音频文件,会回调错误
+     * seekTo操作,如果当前没有播放的音频文件
      * @param targetPosition
      */
     void seekTo(int targetPosition);

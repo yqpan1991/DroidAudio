@@ -76,9 +76,9 @@ public class StatedMediaPlay extends BasePlay {
             }catch (IllegalStateException ex){
                 handleErrorEncounted(0 , 0);
             }
-        }else if(mState == IPlay.IDLE || mState == IPlay.INITIALIZED){
+        }/*else if(mState == IPlay.IDLE || mState == IPlay.INITIALIZED){
             handleErrorEncounted(0, 0);
-        }
+        }*/
     }
 
     @Override
@@ -89,9 +89,9 @@ public class StatedMediaPlay extends BasePlay {
             String filePath = mPlayingUrl;
             init();
             notifyOnStopped(filePath);
-        }else{
+        }/*else{
             handleErrorEncounted(0 , 0);
-        }
+        }*/
     }
 
     @Override
@@ -108,9 +108,9 @@ public class StatedMediaPlay extends BasePlay {
             }catch (IllegalStateException ex){
                 handleErrorEncounted(0, 0);
             }
-        }else if(mState == IPlay.IDLE || mState == IPlay.INITIALIZED){
+        }/*else if(mState == IPlay.IDLE || mState == IPlay.INITIALIZED){
             seekTo(0);
-        }
+        }*/
     }
 
     private void checkNotifyOnPlay() {
@@ -156,10 +156,10 @@ public class StatedMediaPlay extends BasePlay {
             handlePrepared();
         }else if(mState == IPlay.RUNNING){
             checkSeekPlay();
-        }else{
+        }/*else{
             Log.e(TAG, "seekTo state not right, state:"+mState);
             handleErrorEncounted(0, 0);
-        }
+        }*/
     }
 
     private void handlePrepared() {

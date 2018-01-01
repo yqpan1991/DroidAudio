@@ -29,7 +29,7 @@ public class PcmActivity extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_audio_v2);
+        setContentView(R.layout.activity_audio);
         findViewById(R.id.bt_record).setOnClickListener(this);
         findViewById(R.id.bt_stop).setOnClickListener(this);
         findViewById(R.id.bt_play).setOnClickListener(this);
