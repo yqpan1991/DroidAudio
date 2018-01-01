@@ -20,6 +20,9 @@ public class OpusTool {
 
     private static final int START_RECORD_SUC = 1;
     private static final int WRITE_RECORD_FRAME_SUC = 1;
+    private static final int OPEN_RECORD_SUC = 1;
+    private static final int IS_OPUS_FILE_FORMAT = 1;
+    public static final int READ_OPUS_FINISHED = 1;
 
     private native int startRecord(String path);
     private native int writeFrame(ByteBuffer frame, int len);
@@ -49,16 +52,16 @@ public class OpusTool {
         stopRecord();
     }
 
-    public int openFile(String path){
-        return openOpusFile(path);
+    public boolean openFile(String path){
+        return openOpusFile(path) != 0;
     }
 
     public int seekFile(float position){
         return seekOpusFile(position);
     }
 
-    public int isOpusFileFormat(String path){
-        return isOpusFile(path);
+    public boolean isOpusFileFormat(String path){
+        return isOpusFile(path) == IS_OPUS_FILE_FORMAT;
     }
 
     public void closeFile(){
@@ -70,7 +73,11 @@ public class OpusTool {
     }
 
     public long getPcmDuration(){
-        return getTotalPcmDuration();
+        return (long) getTotalPcmDuration();
+    }
+
+    public long getDuration(){
+        return (long) (getTotalPcmDuration() / 48.0f);
     }
 
     public byte[] getPcmWaveForm(String path){

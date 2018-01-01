@@ -207,10 +207,6 @@ public class MediaV2Activity extends AppCompatActivity implements View.OnClickLi
             releasePlayer();
         }
 
-        @Override
-        public void onProgressChanged(String filePath, int curPosition, int duration) {
-            log( "onProgressChanged , filePath:"+filePath);
-        }
     };
 
     private void releasePlayer() {

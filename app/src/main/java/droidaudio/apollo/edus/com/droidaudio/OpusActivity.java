@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 import com.edus.apollo.common.utils.log.LogUtils;
 
 import droidaudio.apollo.edus.com.droidaudio.multimedia.audio.OpusAudioRecord;
-import droidaudio.apollo.edus.com.droidaudio.multimedia.audio.PcmAudioRecord;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IPlayerListener;
 import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IRecordListener;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.OpusAudioTrack;
 
 /**
  *
@@ -21,6 +23,7 @@ public class OpusActivity extends AppCompatActivity implements View.OnClickListe
 
     private OpusAudioRecord mOpusAudioRecord;
     private String mFilePath;
+    private OpusAudioTrack mOpusAudioTrack;
 
 
     @Override
@@ -33,7 +36,6 @@ public class OpusActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.bt_stopPlay).setOnClickListener(this);
         findViewById(R.id.bt_pause).setOnClickListener(this);
         findViewById(R.id.bt_resume).setOnClickListener(this);
-        findViewById(R.id.bt_stopPlay).setOnClickListener(this);
 
         initData();
     }
@@ -51,7 +53,50 @@ public class OpusActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.bt_stop:
                 handleStopRecord();
                 break;
+            case R.id.bt_play:
+                handlePlay();
+                break;
+            case R.id.bt_stopPlay:
+                handleStopPlay();
+                break;
+            case R.id.bt_pause:
+                handlePause();
+                break;
+            case R.id.bt_resume:
+                handleResume();
+                break;
 
+
+        }
+    }
+
+    private void handleResume() {
+        if(mOpusAudioTrack != null){
+            mOpusAudioTrack.resume();
+        }
+    }
+
+    private void handlePause() {
+        if(mOpusAudioTrack != null){
+            mOpusAudioTrack.pause();
+        }
+    }
+
+    private void handleStopPlay() {
+        if(mOpusAudioTrack != null){
+            mOpusAudioTrack.stop();
+        }
+    }
+
+    private void handlePlay() {
+        if(TextUtils.isEmpty(mFilePath)){
+            Toast.makeText(this, "filePath is null, cannot play:", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(mOpusAudioTrack == null){
+            mOpusAudioTrack = new OpusAudioTrack();
+            mOpusAudioTrack.addPlayListener(mIPlayListener);
+            mOpusAudioTrack.play(mFilePath);
         }
     }
 
@@ -106,13 +151,63 @@ public class OpusActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
+    private IPlayerListener mIPlayListener = new IPlayerListener() {
+        @Override
+        public void onPreparing(String filePath) {
+            log("onPreparing:filePath:"+filePath);
+        }
+
+        @Override
+        public void onPrepared(String filePath) {
+            log("onPrepared:filePath:"+filePath);
+        }
+
+        @Override
+        public void onPause(String filePath) {
+            log("onPause:filePath:"+filePath);
+        }
+
+        @Override
+        public void onPlay(String filePath) {
+            log("onPlay:filePath:"+filePath);
+        }
+
+        @Override
+        public void onError(String filePath, int what, int extra) {
+            log("onError:filePath:"+filePath+",what:"+what+",extra:"+extra);
+            if(mOpusAudioTrack != null){
+                mOpusAudioTrack.removePlayListener(mIPlayListener);
+                mOpusAudioTrack = null;
+            }
+        }
+
+        @Override
+        public void onStopped(String filePath) {
+            log("onStopped:filePath:"+filePath);
+            if(mOpusAudioTrack != null){
+                mOpusAudioTrack.removePlayListener(mIPlayListener);
+                mOpusAudioTrack = null;
+            }
+        }
+
+        @Override
+        public void onComplete(String filePath) {
+            log("onComplete:filePath:"+filePath);
+            if(mOpusAudioTrack != null){
+                mOpusAudioTrack.removePlayListener(mIPlayListener);
+                mOpusAudioTrack = null;
+            }
+        }
+
+    };
+
 
 
     private void log(String info){
         if(TextUtils.isEmpty(info)){
             return;
         }
-        LogUtils.d(TAG, info);
+        LogUtils.e(TAG, info);
     }
 
 }

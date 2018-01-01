@@ -198,11 +198,6 @@ public class PcmActivity extends AppCompatActivity implements View.OnClickListen
             log("onComplete:"+filePath);
             releasePlayer();
         }
-
-        @Override
-        public void onProgressChanged(String filePath, int curPosition, int duration) {
-
-        }
     };
 
     private void releasePlayer() {
