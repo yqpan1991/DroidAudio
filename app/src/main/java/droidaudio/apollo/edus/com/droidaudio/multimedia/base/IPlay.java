@@ -62,6 +62,12 @@ public interface IPlay {
     void resume();
 
     /**
+     * 是否支持seekTo
+     * @return
+     */
+    boolean isSupportSeekTo();
+
+    /**
      * seekTo操作,如果当前没有播放的音频文件
      * @param targetPosition
      */

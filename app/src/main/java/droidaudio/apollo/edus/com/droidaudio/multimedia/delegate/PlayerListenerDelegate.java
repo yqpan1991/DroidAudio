@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import droidaudio.apollo.edus.com.droidaudio.multimedia.IPlayNotifyListener;
 import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IPlayerListener;
 
 /**
@@ -104,6 +105,16 @@ public class PlayerListenerDelegate implements IPlayerListener {
             IPlayerListener next = iterator.next();
             if (next != null) {
                 next.onComplete(filePath);
+            }
+        }
+    }
+
+    public void notifyProgress(String filePath, long progress, long duration){
+        Iterator<IPlayerListener> iterator = mIRecordListenerSet.iterator();
+        while (iterator.hasNext()) {
+            IPlayerListener next = iterator.next();
+            if(next instanceof IPlayNotifyListener){
+                ((IPlayNotifyListener)next).notifyOnProgressChanged(filePath, progress, duration);
             }
         }
     }

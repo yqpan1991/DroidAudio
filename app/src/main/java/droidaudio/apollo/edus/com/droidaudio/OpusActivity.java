@@ -189,6 +189,9 @@ public class OpusActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onPlay(String filePath) {
             log("onPlay:filePath:"+filePath);
+            if(mOpusAudioTrack != null){
+                log("duration:"+mOpusAudioTrack.getDuration()+",currentPos:"+mOpusAudioTrack.getCurrentPosition());
+            }
         }
 
         @Override

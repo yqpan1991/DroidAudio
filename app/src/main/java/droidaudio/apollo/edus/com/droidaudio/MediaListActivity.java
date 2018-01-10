@@ -6,13 +6,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
+
+import com.edus.apollo.common.utils.log.LogUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import droidaudio.apollo.edus.com.droidaudio.adapter.MediaAdapter;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.IPlayNotifyListener;
 import droidaudio.apollo.edus.com.droidaudio.multimedia.MediaManager;
 import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IPlayerListener;
 
@@ -22,6 +30,17 @@ public class MediaListActivity extends AppCompatActivity implements View.OnClick
     private List<MediaInfo> mFilePathList = new ArrayList<>();
     private MediaAdapter mMediaAdapter;
     private final boolean LOG_ENABLE = true;
+
+    private LinearLayout mRlBottomOperation;
+    private TextView mTvFileName;
+    private LinearLayout mLlPlayInfo;
+    private TextView mTvCurPos;
+    private TextView mTvDuration;
+    private SeekBar mSbProgress;
+    private RelativeLayout mLlPlayOperation;
+    private ImageView mIvPrevious;
+    private ImageView mIvPlayOrPause;
+    private ImageView mIvNext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +88,16 @@ public class MediaListActivity extends AppCompatActivity implements View.OnClick
 
     private void initView() {
         mLvContent = (ListView) findViewById(R.id.lv_content);
-
+        mRlBottomOperation = (LinearLayout) findViewById(R.id.ll_bottom_operation);
+        mTvFileName = (TextView) findViewById(R.id.tv_file_name);
+        mLlPlayInfo = (LinearLayout) findViewById(R.id.ll_play_info);
+        mTvCurPos = (TextView) findViewById(R.id.tv_cur_pos);
+        mTvDuration = (TextView) findViewById(R.id.tv_duration);
+        mSbProgress = (SeekBar) findViewById(R.id.sb_progress);
+        mLlPlayOperation = (RelativeLayout) findViewById(R.id.ll_play_operation);
+        mIvPrevious = (ImageView) findViewById(R.id.iv_previous);
+        mIvPlayOrPause = (ImageView) findViewById(R.id.iv_play_or_pause);
+        mIvNext = (ImageView) findViewById(R.id.iv_next);
     }
 
     @Override
@@ -77,7 +105,12 @@ public class MediaListActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-    private IPlayerListener mIPlayerListener = new IPlayerListener() {
+    private IPlayNotifyListener mIPlayerListener = new IPlayNotifyListener() {
+        @Override
+        public void notifyOnProgressChanged(String filePath, long progress, long duration) {
+            logInfo("progress info: filePath:"+filePath+",progress: "+progress+",duration:"+duration);
+        }
+
         @Override
         public void onPreparing(String filePath) {
             logInfo("onPreparing:"+filePath);
@@ -133,5 +166,6 @@ public class MediaListActivity extends AppCompatActivity implements View.OnClick
         if(TextUtils.isEmpty(info)){
             return;
         }
+        LogUtils.e(TAG, info);
     }
 }

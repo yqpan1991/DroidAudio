@@ -16,6 +16,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import droidaudio.apollo.edus.com.droidaudio.file.FileUtils;
+import droidaudio.apollo.edus.com.droidaudio.utils.MainLooper;
 
 /**
  * Created by panda on 2017/12/31.
@@ -42,7 +43,7 @@ public class OpusAudioTrack extends BasePlay {
     private Semaphore mFileReadSemaphore;
     private AtomicInteger mState;
     private OpusTool mOpusTool;
-    private long mDecodePos;
+    private volatile long mDecodePos;
     private boolean mDecodeFinished;
 
     public OpusAudioTrack(){
@@ -222,6 +223,11 @@ public class OpusAudioTrack extends BasePlay {
         });
     }
 
+    @Override
+    public boolean isSupportSeekTo() {
+        return true;
+    }
+
     private void resumeInner() {
         //当前在暂停中
         //1. 新创建读取的线程
@@ -300,6 +306,7 @@ public class OpusAudioTrack extends BasePlay {
     @Override
     public int getDuration() {
         if(mOpusTool != null){
+            //todo: 这里获取到的长度有误......
             return (int) mOpusTool.getDuration();
         }
         return 0;
@@ -307,7 +314,7 @@ public class OpusAudioTrack extends BasePlay {
 
     @Override
     public int getCurrentPosition() {
-        return (int) (mDecodePos / 48.0f);
+        return (int) OpusTool.convertPcm2NormalDuration(mDecodePos);
     }
 
     @Override

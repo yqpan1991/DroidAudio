@@ -1,6 +1,7 @@
 LOCAL_PATH := $(call my-dir)
 
 include $(clear_VARS)
+LOCAL_PRELINK_MODULE := false
 
 LOCAL_MODULE 	:= libopustool
 LOCAL_MODULE_FILENAME:=libopustool
@@ -22,22 +23,6 @@ LOCAL_SRC_FILES     := \
 ./opus/src/mlp.c \
 ./opus/src/mlp_data.c
 
-ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
-    LOCAL_ARM_MODE := arm
-    LOCAL_CPPFLAGS += -DLIBYUV_NEON
-    LOCAL_CFLAGS += -DLIBYUV_NEON
-else
-    ifeq ($(TARGET_ARCH_ABI),armeabi)
-	LOCAL_ARM_MODE  := arm
-
-    else
-        ifeq ($(TARGET_ARCH_ABI),x86)
-	    LOCAL_CPPFLAGS += -Dx86fix
-	    LOCAL_CFLAGS += -Dx86fix
-	    LOCAL_ARM_MODE  := arm
-        endif
-    endif
-endif
 
 LOCAL_SRC_FILES     += \
 ./opus/silk/CNG.c \

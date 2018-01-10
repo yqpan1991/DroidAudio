@@ -1,5 +1,7 @@
 package com.edus.apollo.opuslib;
 
+import android.util.Log;
+
 import java.nio.ByteBuffer;
 
 /**
@@ -77,7 +79,8 @@ public class OpusTool {
     }
 
     public long getDuration(){
-        return (long) (getTotalPcmDuration() / 48.0f);
+        Log.e("OpusTool", "getTotalPcmDuration()"+getTotalPcmDuration());
+        return convertPcm2NormalDuration(getTotalPcmDuration());
     }
 
     public byte[] getPcmWaveForm(String path){
@@ -86,6 +89,10 @@ public class OpusTool {
 
     public byte[] getPcmWaveform2(short[] array, int length){
         return getWaveform2(array, length);
+    }
+
+    public static long convertPcm2NormalDuration(long pcmDuration){
+        return (long) (pcmDuration / 48.0);
     }
 
 

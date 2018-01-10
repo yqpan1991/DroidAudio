@@ -113,6 +113,11 @@ public class StatedMediaPlay extends BasePlay {
         }*/
     }
 
+    @Override
+    public boolean isSupportSeekTo() {
+        return true;
+    }
+
     private void checkNotifyOnPlay() {
         notifyOnPlay(mPlayingUrl);
     }

@@ -1,6 +1,9 @@
 package droidaudio.apollo.edus.com.droidaudio.multimedia;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
 
 import com.edus.apollo.common.utils.log.LogUtils;
@@ -18,6 +21,8 @@ import droidaudio.apollo.edus.com.droidaudio.multimedia.delegate.RecordListenerD
  */
 
 public class MediaManager implements IPlay{
+    private static final int MSG_WHAT_PROGRESS = 1;
+    private static final int SHOW_PROGRESS_DELAY = 500;
 
     private final String TAG = this.getClass().getSimpleName();
     private final String LOG_TAG = "[MediaManager]";
@@ -32,6 +37,8 @@ public class MediaManager implements IPlay{
     private final int ACTION_TYPE_RECORD = 2;
     private IPlay mPlayer;
     private IRecord mRecorder;
+
+    private Handler mHandler;
 
 
     public static MediaManager getInstance() {
@@ -48,9 +55,35 @@ public class MediaManager implements IPlay{
     private MediaManager() {
         mPlayerListener = new PlayerListenerDelegate(){
             @Override
+            public void onPreparing(String filePath) {
+                super.onPreparing(filePath);
+                logInfo("onPreparing: filePath:"+filePath);
+                if(mPlayer != null){
+                    prepareShowPress(0);
+                }else{
+                    dismissShowProress();
+                }
+            }
+
+            @Override
+            public void onPause(String filePath) {
+                super.onPause(filePath);
+                logInfo("onPause:filePath:"+filePath);
+                dismissShowProress();
+            }
+
+            @Override
+            public void onPlay(String filePath) {
+                super.onPlay(filePath);
+                logInfo("onPlay:filePath:"+filePath);
+                prepareShowPress(0);
+            }
+
+            @Override
             public void onError(String filePath, int what, int extra) {
                 releasePlayer();
                 super.onError(filePath, what, extra);
+                dismissShowProress();
                 checkPostAction();
 
             }
@@ -59,6 +92,7 @@ public class MediaManager implements IPlay{
             public void onStopped(String filePath) {
                 releasePlayer();
                 super.onStopped(filePath);
+                dismissShowProress();
                 checkPostAction();
             }
 
@@ -66,6 +100,7 @@ public class MediaManager implements IPlay{
             public void onComplete(String filePath) {
                 releasePlayer();
                 super.onComplete(filePath);
+                dismissShowProress();
                 checkPostAction();
             }
         };
@@ -85,6 +120,7 @@ public class MediaManager implements IPlay{
                 checkPostAction();
             }
         };
+        mHandler = new Handler(Looper.getMainLooper(), mHandlerCallback);
     }
 
     private void releaseRecorder() {
@@ -274,6 +310,14 @@ public class MediaManager implements IPlay{
     }
 
     @Override
+    public boolean isSupportSeekTo() {
+        if(mPlayer != null){
+            return mPlayer.isSupportSeekTo();
+        }
+        return false;
+    }
+
+    @Override
     public void seekTo(int targetPosition) {
         if(mPlayer != null){
             mPlayer.seekTo(targetPosition);
@@ -348,7 +392,43 @@ public class MediaManager implements IPlay{
         if(TextUtils.isEmpty(info)){
             return;
         }
-        LogUtils.v(LOG_TAG, info);
+        LogUtils.e(LOG_TAG, info);
     }
+
+    private void prepareShowPress(long delay){
+        dismissShowProress();
+        if(delay < 0){
+            delay = 0;
+        }
+        mHandler.sendEmptyMessageDelayed(MSG_WHAT_PROGRESS, delay);
+    }
+
+    private void dismissShowProress(){
+        mHandler.removeMessages(MSG_WHAT_PROGRESS);
+    }
+
+    private Handler.Callback mHandlerCallback = new Handler.Callback(){
+
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what){
+                case MSG_WHAT_PROGRESS:
+                    notifyProgressInfo();
+                    break;
+            }
+            return true;
+        }
+    };
+
+    private void notifyProgressInfo() {
+        if(mPlayer != null){
+            long current = mPlayer.getCurrentPosition();
+            long total = mPlayer.getDuration();
+            String filePath = mPlayer.getPlayPath();
+            mPlayerListener.notifyProgress(filePath, current, total);
+            prepareShowPress(SHOW_PROGRESS_DELAY);
+        }
+    }
+
 
 }

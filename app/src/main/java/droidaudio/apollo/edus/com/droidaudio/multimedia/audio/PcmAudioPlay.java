@@ -354,6 +354,11 @@ public class PcmAudioPlay extends BasePlay {
         });
     }
 
+    @Override
+    public boolean isSupportSeekTo() {
+        return false;
+    }
+
     private void resumeInner() {
         //当前在暂停中
         //1. 新创建读取的线程

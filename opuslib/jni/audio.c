@@ -7,6 +7,7 @@
 #include <opusfile.h>
 #include <math.h>
 #include "utils.h"
+#include "com_edus_apollo_opuslib_OpusTool.h"
 
 typedef struct {
     int version;
@@ -572,6 +573,7 @@ int initPlayer(const char *path) {
     
     _isSeekable = op_seekable(_opusFile);
     _totalPcmDuration = op_pcm_total(_opusFile, -1);
+    LOGE("op_open_file totalPcmDuration: %f", _totalPcmDuration);
         
     return 1;
 }
