@@ -154,6 +154,7 @@ public class OpusAudioRecord extends AudioRecordWrapper {
 
     @Override
     protected String getFileSuffix() {
-        return "ogg";
+        //注意,此处如果更改为ogg,会导致文件不能获取到总时长,好坑....
+        return "opus";
     }
 }
