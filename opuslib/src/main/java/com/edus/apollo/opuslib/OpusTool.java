@@ -79,7 +79,6 @@ public class OpusTool {
     }
 
     public long getDuration(){
-        Log.e("OpusTool", "getTotalPcmDuration()"+getTotalPcmDuration());
         return convertPcm2NormalDuration(getTotalPcmDuration());
     }
 

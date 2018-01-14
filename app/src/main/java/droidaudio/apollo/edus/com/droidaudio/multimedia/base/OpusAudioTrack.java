@@ -306,7 +306,6 @@ public class OpusAudioTrack extends BasePlay {
     @Override
     public int getDuration() {
         if(mOpusTool != null){
-            //todo: 这里获取到的长度有误......
             return (int) mOpusTool.getDuration();
         }
         return 0;

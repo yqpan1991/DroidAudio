@@ -54,6 +54,10 @@ public abstract class CommonBaseAdapter<T> extends BaseAdapter {
         return mDataList.get(position);
     }
 
+    public int getItemPosition(T t){
+        return mDataList.indexOf(t);
+    }
+
     @Override
     public final long getItemId(int position) {
         return position;

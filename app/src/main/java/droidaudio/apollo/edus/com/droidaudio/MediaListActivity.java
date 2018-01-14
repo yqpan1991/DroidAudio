@@ -22,7 +22,7 @@ import java.util.List;
 import droidaudio.apollo.edus.com.droidaudio.adapter.MediaAdapter;
 import droidaudio.apollo.edus.com.droidaudio.multimedia.IPlayNotifyListener;
 import droidaudio.apollo.edus.com.droidaudio.multimedia.MediaManager;
-import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IPlayerListener;
+import droidaudio.apollo.edus.com.droidaudio.multimedia.base.IPlay;
 
 public class MediaListActivity extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = "["+this.getClass().getSimpleName()+"]";
@@ -39,8 +39,11 @@ public class MediaListActivity extends AppCompatActivity implements View.OnClick
     private SeekBar mSbProgress;
     private RelativeLayout mLlPlayOperation;
     private ImageView mIvPrevious;
-    private ImageView mIvPlayOrPause;
+    private ImageView mIvPlay;
+    private ImageView mIvPause;
     private ImageView mIvNext;
+    private MediaManager mMediaManager;
+    private MediaInfo mPlayingItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +51,11 @@ public class MediaListActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_media_list);
         initView();
         initData();
+        showInitUi();
     }
 
     private void initData() {
+        mMediaManager = MediaManager.getInstance();
         List<String> dirList = new ArrayList<>();
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             dirList.add(getExternalCacheDir().getAbsolutePath());
@@ -75,15 +80,15 @@ public class MediaListActivity extends AppCompatActivity implements View.OnClick
         mLvContent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MediaInfo item = mMediaAdapter.getItem(position);
-                if(item != null){
-                    MediaManager.getInstance().play(item.filePath);
+                mPlayingItem = mMediaAdapter.getItem(position);
+                if(mPlayingItem != null){
+                    MediaManager.getInstance().play(mPlayingItem.filePath);
                     mMediaAdapter.setSelectedPos(position);
                 }
             }
         });
-        MediaManager.getInstance().addPlayListener(mIPlayerListener);
-
+        mMediaManager.addPlayListener(mIPlayerListener);
+        showInitUi();
     }
 
     private void initView() {
@@ -96,56 +101,222 @@ public class MediaListActivity extends AppCompatActivity implements View.OnClick
         mSbProgress = (SeekBar) findViewById(R.id.sb_progress);
         mLlPlayOperation = (RelativeLayout) findViewById(R.id.ll_play_operation);
         mIvPrevious = (ImageView) findViewById(R.id.iv_previous);
-        mIvPlayOrPause = (ImageView) findViewById(R.id.iv_play_or_pause);
+        mIvPlay = (ImageView) findViewById(R.id.iv_play);
+        mIvPause = (ImageView) findViewById(R.id.iv_pause);
         mIvNext = (ImageView) findViewById(R.id.iv_next);
+
+        mIvNext.setOnClickListener(this);
+        mIvPlay.setOnClickListener(this);
+        mIvPause.setOnClickListener(this);
+        mIvPrevious.setOnClickListener(this);
+        mSbProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(!fromUser){
+                    return;
+                }
+                if(mMediaManager.isSupportSeekTo()){
+                    int duration = mMediaManager.getDuration();
+                    if(duration > 0){
+                        mMediaManager.seekTo((int) (progress * 1.0f / 100 * duration));
+                    }
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                if(mMediaManager.isSupportSeekTo() && mMediaManager.getDuration() > 0){
+                    mMediaManager.pause();
+                }
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
+        if(v.getId() == R.id.iv_next){
+            handlePlayNext();
+        }else if(v.getId() == R.id.iv_previous){
+            handlePlayPrevious();
+        }else if(v.getId() == R.id.iv_pause){
+            handlePause();
+        }else if(v.getId() == R.id.iv_play){
+            handlePlay();
+        }
+    }
 
+    private void handlePlay() {
+        if(mMediaManager.getState() == IPlay.RUNNING && !mMediaManager.isPlaying()){
+            mMediaManager.resume();
+        }
+    }
+
+    private void handlePause() {
+        if(mMediaManager.getState() == IPlay.RUNNING && mMediaManager.isPlaying()){
+            mMediaManager.pause();
+        }
+    }
+
+    private void handlePlayPrevious() {
+        if(mMediaAdapter.getCount() <=  0){
+            return;
+        }
+        if(mPlayingItem != null && !TextUtils.isEmpty(mPlayingItem.filePath)){
+            int itemPosition = mMediaAdapter.getItemPosition(mPlayingItem);
+            int playPos = itemPosition - 1;
+            MediaInfo item = mMediaAdapter.getItem(playPos);
+            if(item != null && !TextUtils.isEmpty(item.filePath)){
+                mPlayingItem = item;
+                MediaManager.getInstance().play(mPlayingItem.filePath);
+                mMediaAdapter.setSelectedPos(playPos);
+                return;
+            }
+        }
+        int playPos = 0;
+        MediaInfo item = mMediaAdapter.getItem(playPos);
+        if(item != null && !TextUtils.isEmpty(item.filePath)){
+            mPlayingItem = item;
+            MediaManager.getInstance().play(mPlayingItem.filePath);
+            mMediaAdapter.setSelectedPos(playPos);
+        }
+    }
+
+    private void handlePlayNext() {
+        if(mMediaAdapter.getCount() <=  0){
+            return;
+        }
+        if(mPlayingItem != null && !TextUtils.isEmpty(mPlayingItem.filePath)){
+            int itemPosition = mMediaAdapter.getItemPosition(mPlayingItem);
+            int playPos = itemPosition + 1;
+            MediaInfo item = mMediaAdapter.getItem(playPos);
+            if(item != null && !TextUtils.isEmpty(item.filePath)){
+                mPlayingItem = item;
+                MediaManager.getInstance().play(mPlayingItem.filePath);
+                mMediaAdapter.setSelectedPos(playPos);
+                return;
+            }
+        }
+        int playPos = 0;
+        MediaInfo item = mMediaAdapter.getItem(playPos);
+        if(item != null && !TextUtils.isEmpty(item.filePath)){
+            mPlayingItem = item;
+            MediaManager.getInstance().play(mPlayingItem.filePath);
+            mMediaAdapter.setSelectedPos(playPos);
+        }
     }
 
     private IPlayNotifyListener mIPlayerListener = new IPlayNotifyListener() {
         @Override
         public void notifyOnProgressChanged(String filePath, long progress, long duration) {
             logInfo("progress info: filePath:"+filePath+",progress: "+progress+",duration:"+duration);
+            //更新进度
+            mTvCurPos.setText(String.valueOf(progress/1000));
+            mTvDuration.setText(String.valueOf(mMediaManager.getDuration()/1000));
+            if(duration <= 0 || progress > duration){
+                mSbProgress.setProgress(0);
+                mSbProgress.setMax(0);
+            }else{
+                float displayProgress = progress * 1.0f / duration * 100;
+                mSbProgress.setProgress((int) displayProgress);
+                mSbProgress.setMax(100);
+            }
         }
 
         @Override
         public void onPreparing(String filePath) {
             logInfo("onPreparing:"+filePath);
+            mTvFileName.setText(filePath);
+            //显示为加载中
+            mTvCurPos.setText("unknown");
+            mTvDuration.setText("unknown");
+            mSbProgress.setEnabled(false);
+            mSbProgress.setClickable(false);
+            showPlay(false);
+            showPause(false);
         }
 
         @Override
         public void onPrepared(String filePath) {
             logInfo("onPrepared:"+filePath);
+            mTvFileName.setText(filePath);
+            mTvCurPos.setText("0");
+            mTvDuration.setText(String.valueOf(mMediaManager.getDuration()));
+            if(mMediaManager.isSupportSeekTo()){
+                mSbProgress.setClickable(true);
+                mSbProgress.setEnabled(true);
+            }else{
+                mSbProgress.setClickable(true);
+                mSbProgress.setEnabled(true);
+            }
         }
 
         @Override
         public void onPause(String filePath) {
             logInfo("onPause:"+filePath);
+            showPlay(true);
+            showPause(false);
         }
 
         @Override
         public void onPlay(String filePath) {
             logInfo("onPlay:"+filePath);
+            showPlay(false);
+            showPause(true);
         }
 
         @Override
         public void onError(String filePath, int what, int extra) {
             logInfo("onError:"+filePath);
+            handlePlayDone(true);
         }
 
         @Override
         public void onStopped(String filePath) {
             logInfo("onStopped:"+filePath);
+            handlePlayDone(false);
         }
 
         @Override
         public void onComplete(String filePath) {
             logInfo("onComplete:"+filePath);
+            handlePlayDone(true);
         }
     };
+
+    private void showPlay(boolean visible) {
+        mIvPlay.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        mIvPlay.setClickable(visible);
+    }
+
+    private void showPause(boolean visible){
+        mIvPause.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        mIvPause.setClickable(visible);
+    }
+
+    private void handlePlayDone(boolean playNext) {
+        showInitUi();
+        if(playNext){
+            handlePlayNext();
+        }
+    }
+
+    private void showInitUi() {
+        mTvFileName.setText(null);
+        showPlay(false);
+        showPause(false);
+
+        mTvCurPos.setText("unknown");
+        mTvDuration.setText("unknown");
+        mSbProgress.setEnabled(false);
+        mSbProgress.setClickable(false);
+        mSbProgress.setMax(0);
+        mSbProgress.setProgress(0);
+    }
 
     @Override
     protected void onPause() {
@@ -156,7 +327,7 @@ public class MediaListActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MediaManager.getInstance().removePlayListener(mIPlayerListener);
+        mMediaManager.removePlayListener(mIPlayerListener);
     }
 
     private void logInfo(String info){
